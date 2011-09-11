@@ -1,3 +1,5 @@
+const SPRITE_DIMS = 64;
+
 var Defense = {
   zombieCount: 0
 };
@@ -95,8 +97,8 @@ $(document).ready(function() {
 					//create a bullet entity
 					Crafty.e("2D, DOM, Color, bullet")
 						.attr({
-							x: this._x, 
-							y: this._y, 
+							x: this._x+SPRITE_DIMS/2,
+							y: this._y+SPRITE_DIMS/2,
 							w: 2, 
 							h: 5, 
 							rotation: this._rotation, 
