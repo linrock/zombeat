@@ -79,18 +79,20 @@
         events.shift();
       }
     }, 75);
-    $("#the-audio").bind('play', function() {
-      console.log('Song playing. Game unpaused:' + Crafty._paused);
-      if (Crafty._paused === true) {
-        Crafty.pause();
-      }
-    });
-    $("#the-audio").bind('pause', function() {
-      console.log('Song paused. Game paused:' + Crafty._paused);
-      if (Crafty._paused === false || typeof Crafty._paused === 'undefined') {
-        Crafty.pause();
-      }
-    });
+
+    $("#the-audio")
+      .bind('play', function() {
+        console.log('Song playing. Game unpaused:' + Crafty._paused);
+        if (Crafty._paused === true) {
+          Crafty.pause();
+        }
+      })
+      .bind('pause', function() {
+        console.log('Song paused. Game paused:' + Crafty._paused);
+        if (Crafty._paused === false || typeof Crafty._paused === 'undefined') {
+          Crafty.pause();
+        }
+      });
   </script>
 </body>
 </html>

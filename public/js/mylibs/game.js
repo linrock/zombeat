@@ -219,7 +219,7 @@ $(document).ready(function() {
 			}).collision()
 			.onHit("zombie", function() {
         var frame = Crafty.frame();
-        if (parseInt(player.timers.invulnerable)+60 < frame) {
+        if (parseInt(player.timers.invulnerable)+(FPS/2) < frame) {
           player.hp -= 10;
           player.timers.invulnerable = frame;
           hp.text("HP: "+player.hp);
@@ -257,7 +257,9 @@ $(document).ready(function() {
               }
             }
           };
-          if (Crafty.frame() % FPS == 0) {
+          var frame = Crafty.frame();
+          if (frame % FPS == 0) {
+            // Change direction they're facing
             if (abs_x >= abs_y) {
               if (this.xspeed >= 0) {
                 changeComponent("right");
@@ -271,6 +273,17 @@ $(document).ready(function() {
                 changeComponent("back");
               }
             }
+          }
+          if (frame % (FPS/10) == 0) {
+            // Seek out the player!
+            var max_speed = 3;
+            var x_dir = player.x-this.x;
+            var y_dir = player.y-this.y;
+            var m = Math.sqrt(x_dir*x_dir+y_dir*y_dir);
+            x_dir = x_dir/m;
+            y_dir = y_dir/m;
+            this.xspeed = x_dir*max_speed;
+            this.yspeed = y_dir*max_speed;
           }
 
 					if(this._x > Crafty.viewport.width) {
