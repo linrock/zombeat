@@ -341,7 +341,7 @@ $(document).ready(function() {
           hp: ~~(Defense.wave/2)
 				});
         Crafty.e("2D, DOM, spawn, poof").attr({ 
-          x: this._x, y: this._y 
+          x: this._x-12, y: this._y+12
         });
         this.bind("enterframe", function() {
 					this.x += this.xspeed;
@@ -436,9 +436,9 @@ $(document).ready(function() {
       init: function() {
         this.opacity = 1;
         this.bind("enterframe", function() {
-          this.opacity -= 0.05;
+          this.opacity -= 0.04;
           $(this._element).css({ opacity: this.opacity });
-          if (this.opacity <= 0.05) {
+          if (this.opacity <= 0.04) {
             this.destroy();
           }
         });
