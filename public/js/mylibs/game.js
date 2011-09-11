@@ -63,8 +63,8 @@ $(document).ready(function() {
   var getBoundedX = function(x) {
     if (x < 0) {
       x = 0;
-    } else if (x > Crafty.viewport.width-SPRITE_DIMS*0.67) {
-      x = Crafty.viewport.width-SPRITE_DIMS*0.67;
+    } else if (x > Crafty.viewport.width-SPRITE_DIMS) {
+      x = Crafty.viewport.width-SPRITE_DIMS;
     }
     return x;
   };
@@ -337,7 +337,8 @@ $(document).ready(function() {
 		//zombie component
 		Crafty.c("zombie", {
 			init: function() {
-        if (false) {
+        // if (true) {
+        if (Defense.wave >= 3 && (Math.random()>0.8)) {
           var is_dog = true;
           this.removeComponent("front").addComponent("dfront");
         } else {
@@ -350,8 +351,12 @@ $(document).ready(function() {
 					xspeed: Crafty.randRange(-5, 1), 
 					yspeed: Crafty.randRange(1, 1), 
 					rspeed: 0,
+          max_speed: ZOMBIE_MAX_SPEED,
           hp: ~~(Defense.wave/2)
 				});
+        if (is_dog) {
+          this.max_speed *= 1.5;
+        }
         Crafty.e("2D, DOM, spawn, poof").attr({ 
           x: this._x-12, y: this._y+12
         });
@@ -412,17 +417,13 @@ $(document).ready(function() {
           }
           if (frame % (FPS/10) == 0) {
             // Seek out the player!
-            var max_speed = ZOMBIE_MAX_SPEED;
-            if (is_dog) {
-              max_speed *= 1.5;
-            }
             var x_dir = player.x-this.x;
             var y_dir = player.y-this.y;
             var m = Math.sqrt(x_dir*x_dir+y_dir*y_dir);
             x_dir = x_dir/m;
             y_dir = y_dir/m;
-            this.xspeed = x_dir*max_speed;
-            this.yspeed = y_dir*max_speed;
+            this.xspeed = x_dir*this.max_speed;
+            this.yspeed = y_dir*this.max_speed;
           }
           this.x = getBoundedX(this._x);
           this.y = getBoundedY(this._y);
