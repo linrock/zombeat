@@ -155,12 +155,24 @@ $(document).ready(function() {
     })
 
 		Crafty.background("url('img/abg.png')");
-	
-    Crafty.e("2D, DOM, power").attr({
-      x: Crafty.randRange(0+100, Crafty.viewport.width-100),
-      y: Crafty.randRange(0+100, Crafty.viewport.height-100)
-    });
+   
+    setTimeout(function() {
+      Crafty.e("2D, DOM, power").attr({
+        x: Crafty.randRange(0+100, Crafty.viewport.width-100),
+        y: Crafty.randRange(0+100, Crafty.viewport.height-100)
+      });
+    }, 7000);
 
+    setInterval(function() {
+      if (Math.random()>0.75) {
+        Crafty.e("2D, DOM, power").attr({
+          x: Crafty.randRange(0+100, Crafty.viewport.width-100),
+          y: Crafty.randRange(0+100, Crafty.viewport.height-100)
+        });
+      }
+    }, 10000);
+
+	
     wave_num = Crafty.e("2D, DOM, Text")
       .text("Wave: 1")
       .attr({
