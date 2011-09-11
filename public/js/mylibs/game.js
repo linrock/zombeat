@@ -92,10 +92,16 @@ $(document).ready(function() {
 	// preload the needed assets
 	Crafty.load(SPRITES, function() {
     Crafty.sprite(48, "img/poof.png", { poof: [0,0] });
+
 		Crafty.sprite(32, "img/gifs/sm-front.gif", {  front: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-right.gif", {  right: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-back.gif", {   back: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-left.gif", {   left: [0,0,1,1.5] });
+		
+    Crafty.sprite(40, "img/gifs/dog-front.gif", {  dfront: [0,0,1.2,1] });
+		Crafty.sprite(40, "img/gifs/dog-right.gif", {  dright: [0,0,1.2,1] });
+		Crafty.sprite(40, "img/gifs/dog-back.gif", {   dback: [0,0,1.2,1] });
+		Crafty.sprite(40, "img/gifs/dog-left.gif", {   dleft: [0,0,1.2,1] });
 		
     Crafty.sprite(32, "img/gifs/main-1.gif", { main1: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-2.gif", { main2: [0,0,1,1.5] });
@@ -305,7 +311,7 @@ $(document).ready(function() {
 				
 				// If all zombies are gone, MORE ZOMBIES
 				if (Defense.zombieCount <= 0) {
-					spawnZombies(lastCount, lastCount * 1.2);
+					spawnZombies(lastCount, lastCount * 1.5);
 				}
 			}).collision()
 			.onHit("zombie", function(e) {
@@ -331,6 +337,12 @@ $(document).ready(function() {
 		//zombie component
 		Crafty.c("zombie", {
 			init: function() {
+        if (false) {
+          var is_dog = true;
+          this.removeComponent("front").addComponent("dfront");
+        } else {
+          var is_dog = false;
+        }
 				this.origin("center");
 				this.attr({
 					x: Crafty.randRange(0, Crafty.viewport.width),
@@ -351,7 +363,11 @@ $(document).ready(function() {
           var self = this;
 
           var changeComponent = function(component) {
-            var components = ["front","left","back","right"];
+            if (is_dog) {
+              var components = ["dfront","dleft","dback","dright"];
+            } else {
+              var components = ["front","left","back","right"];
+            }
             for (var i in components) {
               if (self.has(components[i])) {
                 if (component != components[i]) {
@@ -366,21 +382,40 @@ $(document).ready(function() {
             // Change direction they're facing
             if (abs_x >= abs_y) {
               if (this.xspeed >= 0) {
-                changeComponent("right");
+                if (is_dog) {
+                  changeComponent("dright");
+                } else {
+                  changeComponent("right");
+                }
               } else {
-                changeComponent("left");
+                if (is_dog) {
+                  changeComponent("dleft")
+                } else {
+                  changeComponent("left");
+                }
               }
             } else {
               if (this.yspeed >= 0) {
-                changeComponent("front");
+                if (is_dog) {
+                  changeComponent("dfront") }
+                else {
+                  changeComponent("front");
+                }
               } else {
-                changeComponent("back");
+                if (is_dog) {
+                  changeComponent("dback")
+                } else {
+                  changeComponent("back");
+                }
               }
             }
           }
           if (frame % (FPS/10) == 0) {
             // Seek out the player!
             var max_speed = ZOMBIE_MAX_SPEED;
+            if (is_dog) {
+              max_speed *= 1.5;
+            }
             var x_dir = player.x-this.x;
             var y_dir = player.y-this.y;
             var m = Math.sqrt(x_dir*x_dir+y_dir*y_dir);
