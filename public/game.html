@@ -20,9 +20,6 @@
   <script src="js/mylibs/song.js"></script>
   <script src="js/mylibs/game.js"></script>
   <script type="text/javascript" src="js/data.js"></script>
-  <script>
-    // get_songs();
-  </script>
 </head>
 
 <body>
@@ -49,6 +46,8 @@
         events.push(results);
       }
     }
+    // timeupdate is once every 250ms or so. Better way would be to use
+    // setInterval and polling as a way of checking the current time.
     $("#the-audio").bind('timeupdate', function() {
       // console.log('current:' + this.currentTime + ', duration:' + this.duration);
       var time = this.currentTime;
