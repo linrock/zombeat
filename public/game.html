@@ -33,7 +33,9 @@
        Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
        For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
   <script src="js/libs/modernizr-2.0.6.min.js"></script>
-  <script src="js/libs/crafty.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+  <script src="js/libs/crafty-0.4.2.min.js"></script>
+  <script src="js/assassin.js"></script>
 </head>
 
 <body>
@@ -43,7 +45,6 @@
       <h2>This is the game</h2>
     </header>
     <div id="main" role="main">
-      <canvas id="canvas-dynamic"></canvas>
     </div>
     <footer>
 
@@ -62,6 +63,5 @@
   <script defer src="js/script.js"></script>
   <!-- end scripts-->
 
-  <script src="js/compiled/game.js"></script>
 </body>
 </html>
