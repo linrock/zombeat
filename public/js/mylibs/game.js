@@ -14,10 +14,17 @@ const SPRITES = [
   "img/gifs/main-6.gif",
   "img/gifs/main-7.gif",
   "img/gifs/main-8.gif",
+  "img/gifs/dog-front.gif",
+  "img/gifs/dog-right.gif",
+  "img/gifs/dog-back.gif",
+  "img/gifs/dog-left.gif",
 ]
 
 const WIDTH = 800;
 const HEIGHT = 500;
+
+const ZOMBIE_MAX_SPEED = 2;
+
 
 var l_context;
 $(function() {
@@ -29,7 +36,8 @@ $(function() {
 
 var Defense = {
   zombieCount: 0,
-  gameOver: false
+  gameOver: false,
+  wave: 2
 };
 window.Defense = Defense;
 
@@ -78,8 +86,8 @@ $(document).ready(function() {
 		Crafty.sprite(32, "img/gifs/sm-right.gif", {  right: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-back.gif", {   back: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-left.gif", {   left: [0,0,1,1.5] });
-
-		Crafty.sprite(32, "img/gifs/main-1.gif", { main1: [0,0,1,1.5] });
+		
+        Crafty.sprite(32, "img/gifs/main-1.gif", { main1: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-2.gif", { main2: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-3.gif", { main3: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-4.gif", { main4: [0,0,1,1.5] });
@@ -138,10 +146,10 @@ $(document).ready(function() {
         yspeed: 0,
         decay: 0.9, 
         x: Crafty.viewport.width / 2,
-        y: Crafty.viewport.height / 2,
+        y: Crafty.viewport.height - 100,
         score: 0,
         hp: 100,
-        _rotation: 180,
+        _rotation: 0,
         timers: {
           invulnerable: 0
         }
@@ -192,10 +200,6 @@ $(document).ready(function() {
 					this.move.down = false;
 				}
 			}).bind("enterframe", function() {
-        if (Crafty.frame() % 60 == 0) {
-          console.log(this._rotation);
-        }
-
 				if(this.move.right) this._rotation += 5;
 				if(this.move.left) this._rotation -= 5;
         if (this._rotation < 0) {
@@ -314,7 +318,8 @@ $(document).ready(function() {
 					y: Crafty.randRange(0, 100),
 					xspeed: Crafty.randRange(-5, 1), 
 					yspeed: Crafty.randRange(1, 1), 
-					rspeed: 0
+					rspeed: 0,
+          hp: Defense.wave
 				})
         .bind("enterframe", function() {
 					this.x += this.xspeed;
@@ -353,7 +358,7 @@ $(document).ready(function() {
           }
           if (frame % (FPS/10) == 0) {
             // Seek out the player!
-            var max_speed = 2;
+            var max_speed = ZOMBIE_MAX_SPEED;
             var x_dir = player.x-this.x;
             var y_dir = player.y-this.y;
             var m = Math.sqrt(x_dir*x_dir+y_dir*y_dir);
@@ -366,19 +371,21 @@ $(document).ready(function() {
           this.y = getBoundedY(this._y);
 				}).collision()
 				.onHit("bullet", function(e) {
-					//if hit by a bullet increment the score
-					player.score += 5;
-					score.text("Score: "+player.score);
 					e[0].obj.destroy(); //destroy the bullet
-
-          Defense.zombieCount--;
-          this.destroy();
-				
+          this.hp -= 1;
+          if (this.hp <= 0) {
+            player.score += 100;
+            score.text("Score: "+player.score);
+            Defense.zombieCount--;
+            this.destroy();
+				  }
           this.x -= 5*this.xspeed;
           this.y -= 5*this.yspeed;
 
 					// Split into two zombies by creating another zombie
-					// Crafty.e("2D, DOM, "+size+", Collision, zombie").attr({x: this._x, y: this._y});
+					// Crafty.e("2D, DOM, "+size+", Collision, zombie").attr({
+          //   x: this._x, y: this._y
+          // });
 				})
         .onHit("zombie", function(e) {
           if (e.length <= 1) {
