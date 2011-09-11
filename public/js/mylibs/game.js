@@ -1,7 +1,8 @@
 $(document).ready(function() {
 	Crafty.init(60, 500,500);
 	Crafty.canvas();
-	
+	Crafty.pause();    // Game is paused at first.
+
 	// preload the needed assets
 	Crafty.load(["img/asprite.png", "img/abg.png"], function() {
 		// splice the spritemap

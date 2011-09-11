@@ -18,7 +18,7 @@
   <script src="js/libs/jquery-1.6.2.min.js"></script>
   <script src="js/libs/crafty-0.4.2.min.js"></script>
   <script src="js/mylibs/song.js"></script>
-  <!-- <script src="js/mylibs/game.js"></script> -->
+  <script src="js/mylibs/game.js"></script>
   <script>
     // get_songs();
   </script>
@@ -31,10 +31,6 @@
     </header>
     <div id="main" role="main">
       <audio id="the-audio" src="music/Tromboon-sample.ogg" controls preload></audio>
-      <form id="the-form">
-        <input type="input" value="dude">
-      </form>
-      <div id="songplayer"></div>
     </div>
     <footer></footer>
   </div>
@@ -44,6 +40,14 @@
   <script>
     $("#the-audio").bind('timeupdate', function() {
       console.log('current:' + this.currentTime + ', duration:' + this.duration);
+    });
+    $("#the-audio").bind('play', function() {
+      console.log('Song playing. Game unpaused.');
+      Crafty.pause();
+    });
+    $("#the-audio").bind('pause', function() {
+      console.log('Song paused. Game paused.');
+      Crafty.pause();
     });
   </script>
 </body>
