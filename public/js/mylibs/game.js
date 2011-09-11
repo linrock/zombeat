@@ -14,6 +14,10 @@ const SPRITES = [
   "img/gifs/main-6.gif",
   "img/gifs/main-7.gif",
   "img/gifs/main-8.gif",
+  "img/gifs/dog-front.gif",
+  "img/gifs/dog-right.gif",
+  "img/gifs/dog-back.gif",
+  "img/gifs/dog-left.gif",
 ]
 
 const WIDTH = 800;
@@ -87,8 +91,8 @@ $(document).ready(function() {
 		Crafty.sprite(32, "img/gifs/sm-right.gif", {  right: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-back.gif", {   back: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-left.gif", {   left: [0,0,1,1.5] });
-
-		Crafty.sprite(32, "img/gifs/main-1.gif", { main1: [0,0,1,1.5] });
+		
+        Crafty.sprite(32, "img/gifs/main-1.gif", { main1: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-2.gif", { main2: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-3.gif", { main3: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-4.gif", { main4: [0,0,1,1.5] });
@@ -299,7 +303,7 @@ $(document).ready(function() {
 				
 				//if all zombies are gone, start again with more
 				if (Defense.zombieCount <= 0) {
-					spawnZombies(lastCount/2, lastCount);
+					spawnZombies(lastCount, lastCount * 1.2);
 				}
 			}).collision()
 			.onHit("zombie", function(e) {
