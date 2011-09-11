@@ -1,11 +1,5 @@
-#canvas-dynamic {
-  width: 600px;
-  height: 480px;
-  border: 3px solid black;
-}
-
 body {
-    background: #1b1c1e url(/images/body_bg.png) 50% 0 repeat-y;
+    background: #1b1c1e url(/img/body_bg.png) 50% 0 repeat-y;
     background-color: black;
     text-align: left;
     font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -30,8 +24,4 @@ body {
 audio {
   display: block;
   margin: 15px auto;
-}
-
-#soundmanager-debug{
-  margin-top:100px;
 }
