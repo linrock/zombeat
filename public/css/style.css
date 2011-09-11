@@ -29,6 +29,7 @@ body {
   color: white;
   z-index: 20;
   display: none;
+  position: absolute;
 }
 .strobe {
   border: 2px solid gray;
