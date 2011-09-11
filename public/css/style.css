@@ -14,11 +14,18 @@ body {
   margin: 0 auto;
   border:2px solid #333;
 }
+#dude-canvas {
+  position: absolute;
+  z-index: 10;
+  background-color: white;
+  opacity: 0;
+}
 .strobe {
   border: 2px solid gray;
   width: 64px;
   height: 64px;
   background-color: black;
+  float: left;
 }
 
 audio {

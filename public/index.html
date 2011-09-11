@@ -28,7 +28,9 @@
       <center><h2>Zombie Defense</h2></center>
     </header>
     <div id="main" role="main">
-      <div id="cr-stage"></div>
+      <div id="cr-stage">
+        <canvas id="dude-canvas"></canvas>
+      </div>
       <div class="strobe"></div>
       <audio id="the-audio" src="data/prison-song.mp3" controls preload></audio>
     </div>
@@ -48,6 +50,7 @@
       }
     }
     var $strobe = $(".strobe");
+    var $lightning = $("#dude-canvas");
     var $audio = $("#the-audio")[0];
 
     // timeupdate is once every 250ms or so. Better way would be to use
@@ -56,30 +59,40 @@
 
     setInterval(function() {
       var time = $audio.currentTime;
+      var opacity = parseFloat($lightning.css('opacity'));
+      if (opacity > 0) {
+        opacity -= 0.15;
+        if (opacity <= 0.01) {
+          opacity = 0;
+        }
+        $lightning.css({ 'opacity': opacity });
+      }
       $strobe.css({ 'background-color': 'black' });
       if (time > events[0][0]) {
         console.log(events[0]+"");
         var amplitude = events[0][1];
         if (amplitude > -10) {
-          console.log('MORE ZOMBIES');
           Defense.spawnZombies(3,5);
           $strobe.css({ 'background-color': 'white' });
+          $lightning.css({ 'opacity': 0.4 });
         }
         events.shift();
       }
-    }, 100);
-    $("#the-audio").bind('play', function() {
-      console.log('Song playing. Game unpaused:' + Crafty._paused);
-      if (Crafty._paused === true) {
-        Crafty.pause();
-      }
-    });
-    $("#the-audio").bind('pause', function() {
-      console.log('Song paused. Game paused:' + Crafty._paused);
-      if (Crafty._paused === false || typeof Crafty._paused === 'undefined') {
-        Crafty.pause();
-      }
-    });
+    }, 75);
+
+    $("#the-audio")
+      .bind('play', function() {
+        console.log('Song playing. Game unpaused:' + Crafty._paused);
+        if (Crafty._paused === true) {
+          Crafty.pause();
+        }
+      })
+      .bind('pause', function() {
+        console.log('Song paused. Game paused:' + Crafty._paused);
+        if (Crafty._paused === false || typeof Crafty._paused === 'undefined') {
+          Crafty.pause();
+        }
+      });
   </script>
 </body>
 </html>

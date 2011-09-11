@@ -1,21 +1,43 @@
+const FPS = 60;
+const SPRITE_DIMS = 64;
+const SPRITES = [
+	"img/sprites.png",
+  "img/abg.png",
+  "img/gifs/sm-front.gif",
+  "img/gifs/sm-right.gif",
+  "img/gifs/sm-back.gif",
+  "img/gifs/sm-left.gif",
+]
+
+const WIDTH = 800;
+const HEIGHT = 500;
+
+var l_context;
+$(function() {
+  l_canvas = $("#dude-canvas")[0];
+  l_canvas.width = WIDTH;
+  l_canvas.height = HEIGHT;
+  l_context = l_canvas.getContext('2d');
+});
+
 var Defense = {
   zombieCount: 0
 };
 window.Defense = Defense;
 
 $(document).ready(function() {
-	Crafty.init(60, 800, 500);
+	Crafty.init(FPS, WIDTH, HEIGHT);
 	Crafty.canvas();
 	// Crafty.pause();    // Game is paused at first.
 
-  //function to fill the screen with asteroids by a random amount
+  //function to fill the screen with zombies by a random amount
   var spawnZombies = function(lower, upper) {
     var rocks = Crafty.randRange(lower, upper);
     if (Defense.zombieCount < 50) {
       Defense.zombieCount += rocks;
       lastCount = rocks;
       for(var i = 0; i < rocks; i++) {
-        Crafty.e("2D, DOM, big, Collision, asteroid");
+        Crafty.e("2D, DOM, front, Collision, zombie");
       }
     }
   };
@@ -24,15 +46,26 @@ $(document).ready(function() {
   Defense.spawnZombies = spawnZombies;
 
 	// preload the needed assets
-	Crafty.load(["img/asprite.png", "img/abg.png"], function() {
+	Crafty.load(SPRITES, function() {
 		// splice the spritemap
-		Crafty.sprite(64, "img/asprite.png", {
+		Crafty.sprite(64, "img/sprites.png", {
 			ship: [0,0],
-			big: [1,0],
-			medium: [2,0],
-			small: [3,0]
+			medium: [2,1],
+			small: [3,1]
 		});
-		
+		Crafty.sprite(64, "img/gifs/sm-front.gif", {
+      front: [0,0]
+    });
+		Crafty.sprite(64, "img/gifs/sm-right.gif", {
+      right: [0,0]
+    });
+		Crafty.sprite(64, "img/gifs/sm-back.gif", {
+      back: [0,0]
+    });
+		Crafty.sprite(64, "img/gifs/sm-left.gif", {
+      left: [0,0]
+    });
+
 		//start the main scene when loaded
 		Crafty.scene("main");
 	});
@@ -95,8 +128,8 @@ $(document).ready(function() {
 					//create a bullet entity
 					Crafty.e("2D, DOM, Color, bullet")
 						.attr({
-							x: this._x, 
-							y: this._y, 
+							x: this._x+SPRITE_DIMS/2,
+							y: this._y+SPRITE_DIMS/2,
 							w: 2, 
 							h: 5, 
 							rotation: this._rotation, 
@@ -179,14 +212,14 @@ $(document).ready(function() {
 					this.y = Crafty.viewport.height;
 				}
 				
-				//if all asteroids are gone, start again with more
+				//if all zombies are gone, start again with more
 				if (Defense.zombieCount <= 0) {
 					spawnZombies(lastCount, lastCount * 2);
 				}
 			}).collision()
-			.onHit("asteroid", function() {
+			.onHit("zombie", function() {
         var frame = Crafty.frame();
-        if (parseInt(player.timers.invulnerable)+60 < frame) {
+        if (parseInt(player.timers.invulnerable)+(FPS/2) < frame) {
           player.hp -= 10;
           player.timers.invulnerable = frame;
           hp.text("HP: "+player.hp);
@@ -195,21 +228,64 @@ $(document).ready(function() {
         }
 			});
 		
-		//Asteroid component
-		Crafty.c("asteroid", {
+		//zombie component
+		Crafty.c("zombie", {
 			init: function() {
 				this.origin("center");
 				this.attr({
-					x: Crafty.randRange(0, Crafty.viewport.width), //give it random positions, rotation and speed
-					x: Crafty.randRange(0, Crafty.viewport.height),
-					xspeed: Crafty.randRange(1, 5), 
-					yspeed: Crafty.randRange(1, 5), 
-					rspeed: Crafty.randRange(-5, 5)
-				}).bind("enterframe", function() {
+					x: Crafty.randRange(0, Crafty.viewport.width),
+					y: Crafty.randRange(0, Crafty.viewport.height),
+					xspeed: Crafty.randRange(-5, 1), 
+					yspeed: Crafty.randRange(1, 1), 
+					rspeed: 0
+				})
+        .bind("enterframe", function() {
 					this.x += this.xspeed;
 					this.y += this.yspeed;
-					this.rotation += this.rspeed;
-					
+          var abs_x = Math.abs(this.xspeed);
+          var abs_y = Math.abs(this.yspeed);
+          var self = this;
+
+          var changeComponent = function(component) {
+            var components = ["front","left","back","right"];
+            for (var i in components) {
+              if (self.has(components[i])) {
+                if (component != components[i]) {
+                  self.removeComponent(components[i]).addComponent(component);
+                }
+                break;
+              }
+            }
+          };
+          var frame = Crafty.frame();
+          if (frame % FPS == 0) {
+            // Change direction they're facing
+            if (abs_x >= abs_y) {
+              if (this.xspeed >= 0) {
+                changeComponent("right");
+              } else {
+                changeComponent("left");
+              }
+            } else {
+              if (this.yspeed >= 0) {
+                changeComponent("front");
+              } else {
+                changeComponent("back");
+              }
+            }
+          }
+          if (frame % (FPS/10) == 0) {
+            // Seek out the player!
+            var max_speed = 3;
+            var x_dir = player.x-this.x;
+            var y_dir = player.y-this.y;
+            var m = Math.sqrt(x_dir*x_dir+y_dir*y_dir);
+            x_dir = x_dir/m;
+            y_dir = y_dir/m;
+            this.xspeed = x_dir*max_speed;
+            this.yspeed = y_dir*max_speed;
+          }
+
 					if(this._x > Crafty.viewport.width) {
 						this.x = -64;
 					}
@@ -229,30 +305,19 @@ $(document).ready(function() {
 					score.text("Score: "+player.score);
 					e[0].obj.destroy(); //destroy the bullet
 
-					var size;
-					//decide what size to make the asteroid
-					if(this.has("big")) {
-						this.removeComponent("big").addComponent("medium");
-						size = "medium";
-					} else if(this.has("medium")) {
-						this.removeComponent("medium").addComponent("small");
-						size = "small";
-					} else if(this.has("small")) { //if the lowest size, delete self
-						Defense.zombieCount--;
-						this.destroy();
-						return;
-					}
+          Defense.zombieCount--;
+          this.destroy();
 				
           this.x -= 5*this.xspeed;
           this.y -= 5*this.yspeed;
 
-					// Split into two asteroids by creating another asteroid
-					// Crafty.e("2D, DOM, "+size+", Collision, asteroid").attr({x: this._x, y: this._y});
+					// Split into two zombies by creating another zombie
+					// Crafty.e("2D, DOM, "+size+", Collision, zombie").attr({x: this._x, y: this._y});
 				});
 			}
 		});
 		
-		//first level has between 1 and 10 asteroids
+		//first level has between 1 and 10 zombies
 		spawnZombies(1, 10);
 	});
 });
