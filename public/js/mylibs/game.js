@@ -7,6 +7,14 @@ const SPRITES = [
   "img/gifs/sm-right.gif",
   "img/gifs/sm-back.gif",
   "img/gifs/sm-left.gif",
+  "img/gifs/main-1.gif",
+  "img/gifs/main-2.gif",
+  "img/gifs/main-3.gif",
+  "img/gifs/main-4.gif",
+  "img/gifs/main-5.gif",
+  "img/gifs/main-6.gif",
+  "img/gifs/main-7.gif",
+  "img/gifs/main-8.gif",
 ]
 
 const WIDTH = 800;
@@ -48,23 +56,19 @@ $(document).ready(function() {
 	// preload the needed assets
 	Crafty.load(SPRITES, function() {
 		// splice the spritemap
-		Crafty.sprite(64, "img/sprites.png", {
-			ship: [0,0],
-			medium: [2,1],
-			small: [3,1]
-		});
-		Crafty.sprite(64, "img/gifs/sm-front.gif", {
-      front: [0,0]
-    });
-		Crafty.sprite(64, "img/gifs/sm-right.gif", {
-      right: [0,0]
-    });
-		Crafty.sprite(64, "img/gifs/sm-back.gif", {
-      back: [0,0]
-    });
-		Crafty.sprite(64, "img/gifs/sm-left.gif", {
-      left: [0,0]
-    });
+		Crafty.sprite(32, "img/gifs/sm-front.gif", {  front: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/sm-right.gif", {  right: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/sm-back.gif", {   back: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/sm-left.gif", {   left: [0,0,1,1.5] });
+
+		Crafty.sprite(32, "img/gifs/main-1.gif", { main1: [0,0,1,1.5] });
+		Crafty.sprite(48, "img/gifs/main-2.gif", { main2: [0,0] });
+		Crafty.sprite(48, "img/gifs/main-3.gif", { main3: [0,0] });
+		Crafty.sprite(48, "img/gifs/main-4.gif", { main4: [0,0] });
+		Crafty.sprite(48, "img/gifs/main-5.gif", { main5: [0,0] });
+		Crafty.sprite(48, "img/gifs/main-6.gif", { main6: [0,0] });
+		Crafty.sprite(48, "img/gifs/main-7.gif", { main7: [0,0] });
+		Crafty.sprite(48, "img/gifs/main-8.gif", { main8: [0,0] });
 
 		//start the main scene when loaded
 		Crafty.scene("main");
@@ -98,7 +102,7 @@ $(document).ready(function() {
       })
       .css({ color: '#fff' });
 		//player entity
-		var player = Crafty.e("2D, Canvas, ship, Controls, Collision")
+		var player = Crafty.e("2D, DOM, main1, Controls, Collision")
 			.attr({
         move: {
           left: false,
@@ -113,6 +117,7 @@ $(document).ready(function() {
         y: Crafty.viewport.height / 2,
         score: 0,
         hp: 100,
+        _rotation: 180,
         timers: {
           invulnerable: 0
         }
@@ -163,16 +168,26 @@ $(document).ready(function() {
 					this.move.down = false;
 				}
 			}).bind("enterframe", function() {
-				if(this.move.right) this.rotation += 5;
-				if(this.move.left) this.rotation -= 5;
-				
+        if (Crafty.frame() % 60 == 0) {
+          console.log(this._rotation);
+        }
+
+				if(this.move.right) this._rotation += 5;
+				if(this.move.left) this._rotation -= 5;
+        if (this._rotation < 0) {
+          this._rotation += 360;
+        } else if (this._rotation > 360) {
+          this._rotation -= 360;
+        }
+
 				// acceleration and movement vector
         var angle = this._rotation * Math.PI / 180;
 				var vx = Math.sin(angle) * 0.3,
             vy = Math.cos(angle) * 0.3;
-				
+			
+        var self = this;  
         var changePlayerComponent = function(component) {
-          var components = ["front","left","back","right"];
+          var components = ["main1","main2","main3","main4","main5","main6","main7","main8"];
           for (var i in components) {
             if (self.has(components[i])) {
               if (component != components[i]) {
@@ -183,24 +198,26 @@ $(document).ready(function() {
           }
         };
 
-        // console.log(angle);
 
-        if ((337.5 < angle && angle < 360) || (angle >= 0 && angle <= 22.5)) {
-
-        } else if (22.5 < angle && angle <= 67.5) {
-
-        } else if (67.5 < angle && angle <= 112.5) {
-
-        } else if (112.5 < angle && angle <= 157.5) {
-
-        } else if (157.5 < angle && angle <= 202.5) {
-
-        } else if (202.5 < angle && angle <= 247.5) {
-
-        } else if (247.5 < angle && angle <= 292.5) {
-
-        } else if (292.5 < angle && angle <= 337.5) {
-
+        if (Crafty.frame() % (FPS/10) == 0) {
+          var angle = this._rotation;
+          if ((337.5 < angle && angle < 360) || (angle >= 0 && angle <= 22.5)) {
+            changePlayerComponent('main5');
+          } else if (22.5 < angle && angle <= 67.5) {
+            changePlayerComponent('main6');
+          } else if (67.5 < angle && angle <= 112.5) {
+            changePlayerComponent('main7');
+          } else if (112.5 < angle && angle <= 157.5) {
+            changePlayerComponent('main8');
+          } else if (157.5 < angle && angle <= 202.5) {
+            changePlayerComponent('main1');
+          } else if (202.5 < angle && angle <= 247.5) {
+            changePlayerComponent('main2');
+          } else if (247.5 < angle && angle <= 292.5) {
+            changePlayerComponent('main3');
+          } else if (292.5 < angle && angle <= 337.5) {
+            changePlayerComponent('main4');
+          }
         }
 
 				// if the move up is true, increment the y/xspeeds
