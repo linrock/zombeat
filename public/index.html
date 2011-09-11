@@ -51,6 +51,11 @@
         events.push(results);
       }
     }
+    var waves = [];
+    for (var i in data.sections) {
+      var start_time = data.sections[i].start;
+      waves.push(start_time);
+    }
     var $strobe = $(".strobe");
     var $lightning = $("#dude-canvas");
     var $audio = $("#the-audio")[0];
@@ -81,6 +86,11 @@
           $lightning.css({ 'opacity': 0.4 });
         }
         events.shift();
+      }
+      if (time > waves[0]) {
+        Defense.nextWave();
+        console.log('NEXT WAVE!! - ' + Defense.wave);
+        waves.shift();
       }
     }, 75);
 

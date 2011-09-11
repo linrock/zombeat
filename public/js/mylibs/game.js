@@ -33,7 +33,8 @@ $(function() {
 var Defense = {
   zombieCount: 0,
   gameOver: false,
-  wave: 2
+  wave: 1,
+  nextWave: false
 };
 window.Defense = Defense;
 
@@ -70,10 +71,14 @@ $(document).ready(function() {
     }
     return y;
   };
-
-  var lastCount;    // keep a count of zombies
-		
+  var nextWave = function() {
+    Defense.wave++;
+    wave_num.text("Wave: "+Defense.wave);
+  };
+  Defense.nextWave = nextWave;
   Defense.spawnZombies = spawnZombies;
+  
+  var lastCount;    // keep a count of zombies
 
 	// preload the needed assets
 	Crafty.load(SPRITES, function() {
@@ -106,29 +111,41 @@ $(document).ready(function() {
     $("#game-over").fadeIn('slow');
   });
 
+  var wave_num;
 	Crafty.scene("main", function() {
 		Crafty.background("url('img/abg.png')");
 		
-		//score display
-		var score = Crafty.e("2D, DOM, Text")
-			.text("Score: 0")
-			.attr({
+    wave_num = Crafty.e("2D, DOM, Text")
+      .text("Wave: 1")
+      .attr({
         x: Crafty.viewport.width - 300,
-        y: Crafty.viewport.height - 50,
-        w: 200,
-        h: 50
+        y: 25,
+        w: 100,
+        h: 25
       })
-			.css({color: "#fff"});
+      .css({ color: '#fff' });
 
     var hp = Crafty.e("2D, DOM, Text")
       .text("HP: 100")
       .attr({
         x: Crafty.viewport.width - 200,
-        y: Crafty.viewport.height - 50,
-        w: 200,
-        h: 50
+        y: 25,
+        w: 100,
+        h: 25
       })
       .css({ color: '#fff' });
+
+		//score display
+		var score = Crafty.e("2D, DOM, Text")
+			.text("Score: 0")
+			.attr({
+        x: Crafty.viewport.width - 100,
+        y: 25,
+        w: 100,
+        h: 25
+      })
+			.css({color: "#fff"});
+
 		//player entity
 		var player = Crafty.e("2D, DOM, main1, Controls, Collision")
 			.attr({
