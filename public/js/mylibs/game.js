@@ -4,6 +4,7 @@ const SPRITES = [
   "img/abg.png",
   "img/poof.png",
   "img/sm-corpse.gif",
+  "img/tot-corpse.gif",
   "img/gifs/trick-or-treat.gif",
   "img/gifs/sm-front.gif",
   "img/gifs/sm-right.gif",
@@ -97,6 +98,7 @@ $(document).ready(function() {
     Crafty.sprite(48, "img/poof.png", { poof: [0,0] });
 
 		Crafty.sprite(32, "img/sm-corpse.gif", {  smcorpse: [0,0,1,0.75] });
+		Crafty.sprite(32, "img/tot-corpse.gif", {  totcorpse: [0,0,1,1.5] });
 
 		Crafty.sprite(32, "img/gifs/trick-or-treat.gif", { tot: [0,0,1,1.5] });
 
@@ -379,6 +381,7 @@ $(document).ready(function() {
         if (Defense.wave >= 3 && (Math.random()>0.8)) {
           var zombie_type = "dog";
           this.removeComponent("front").addComponent("dfront");
+        // } else if (true) {
         } else if (Math.random()>0.9) {
           var zombie_type = "tot";
           this.removeComponent("front").addComponent("tot");
@@ -469,6 +472,10 @@ $(document).ready(function() {
             if (zombie_type === "normal") {
               Crafty.e("2D, DOM, death, smcorpse").attr({ 
                 x: this._x, y: this._y+24
+              });
+            } else if (zombie_type === "tot") {
+              Crafty.e("2D, DOM, death, totcorpse").attr({ 
+                x: this._x, y: this._y
               });
             }
 				  }
