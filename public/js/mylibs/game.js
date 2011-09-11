@@ -5,6 +5,7 @@ const SPRITES = [
   "img/poof.png",
   "img/sm-corpse.gif",
   "img/tot-corpse.gif",
+  "img/gifs/powerup.gif",
   "img/gifs/trick-or-treat.gif",
   "img/gifs/sm-front.gif",
   "img/gifs/sm-right.gif",
@@ -100,6 +101,8 @@ $(document).ready(function() {
 		Crafty.sprite(32, "img/sm-corpse.gif", {  smcorpse: [0,0,1,0.75] });
 		Crafty.sprite(32, "img/tot-corpse.gif", {  totcorpse: [0,0,1,1.5] });
 
+		Crafty.sprite(32, "img/gifs/powerup.gif", { power: [0,0,1,1.5] });
+
 		Crafty.sprite(32, "img/gifs/trick-or-treat.gif", { tot: [0,0,1,1.5] });
 
 		Crafty.sprite(32, "img/gifs/sm-front.gif", {  front: [0,0,1,1.5] });
@@ -152,7 +155,12 @@ $(document).ready(function() {
     })
 
 		Crafty.background("url('img/abg.png')");
-		
+	
+    Crafty.e("2D, DOM, power").attr({
+      x: Crafty.randRange(0+100, Crafty.viewport.width-100),
+      y: Crafty.randRange(0+100, Crafty.viewport.height-100)
+    });
+
     wave_num = Crafty.e("2D, DOM, Text")
       .text("Wave: 1")
       .attr({
@@ -203,34 +211,46 @@ $(document).ready(function() {
         _rotation: 0,
         timers: {
           invulnerable: 0,
-          shot: 0
+          shot: 0,
+          powerup: 0
         },
         shootBullet: function() {
+          var self = this;
+          var createBullet = function(rotation) {
+            Crafty.e("2D, DOM, Color, bullet")
+              .attr({
+                x: self._x+SPRITE_DIMS/2,
+                y: self._y+SPRITE_DIMS/2,
+                w: 5, 
+                h: 5, 
+                rotation: rotation, 
+                xspeed: 20 * Math.sin(rotation / 57.3), 
+                yspeed: 20 * Math.cos(rotation / 57.3)
+              })
+              .color("rgb(255, 255, 0)")
+              .bind("enterframe", function() {	
+                this.x += this.xspeed;
+                this.y -= this.yspeed;
+                
+                // Destroy if it goes out of bounds
+                if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+                  this.destroy();
+                }
+              });
+          };
           var frame = Crafty.frame();
           if (frame < this.timers.shot + 8) {
             return;
           }
 					// Create a bullet entity
-					Crafty.e("2D, DOM, Color, bullet")
-						.attr({
-							x: this._x+SPRITE_DIMS/2,
-							y: this._y+SPRITE_DIMS/2,
-							w: 5, 
-							h: 5, 
-							rotation: this._rotation, 
-							xspeed: 20 * Math.sin(this._rotation / 57.3), 
-							yspeed: 20 * Math.cos(this._rotation / 57.3)
-						})
-						.color("rgb(255, 255, 0)")
-						.bind("enterframe", function() {	
-							this.x += this.xspeed;
-							this.y -= this.yspeed;
-							
-							// Destroy if it goes out of bounds
-							if(this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
-								this.destroy();
-							}
-						});
+          // if (true) {
+          if (this.timers.powerup > 0 && frame < this.timers.powerup + 60*10) {
+            createBullet(this._rotation);
+            createBullet(this._rotation+3);
+            createBullet(this._rotation-3);
+          } else {
+            createBullet(this._rotation);
+          }
           this.timers.shot = frame;
         }
       })
@@ -371,7 +391,11 @@ $(document).ready(function() {
         if (player.hp <= 0) {
           Crafty.scene("game_over");
         }
-			});
+			})
+      .onHit("power", function(e) {
+				e[0].obj.destroy();
+        player.timers.powerup = Crafty.frame();
+      });
 		Defense.player = player;
 
 		//zombie component
