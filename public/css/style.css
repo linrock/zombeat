@@ -3,13 +3,6 @@
   height: 480px;
   border: 3px solid black;
 }
-header {
-  background: url(/images/banner.png) repeat-x;
-  color: #DEF;
-  height: 100px;
-  margin: 0 auto;
-  padding: 10px 0;
-}
 
 body {
     background: #1b1c1e url(/images/body_bg.png) 50% 0 repeat-y;
@@ -24,6 +17,8 @@ body {
 
 #cr-stage {
     margin: 0 auto;
+border:2px solid #333;
+border-radius:10px;
 }
 
 audio {
