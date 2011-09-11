@@ -42,12 +42,16 @@
       console.log('current:' + this.currentTime + ', duration:' + this.duration);
     });
     $("#the-audio").bind('play', function() {
-      console.log('Song playing. Game unpaused.');
-      Crafty.pause();
+      console.log('Song playing. Game unpaused:' + Crafty._paused);
+      if (typeof Crafty._paused === 'undefined' || Crafty._paused === true) {
+        Crafty.pause();
+      }
     });
     $("#the-audio").bind('pause', function() {
-      console.log('Song paused. Game paused.');
-      Crafty.pause();
+      console.log('Song paused. Game paused:' + Crafty._paused);
+      if (Crafty._paused === false) {
+        Crafty.pause();
+      }
     });
   </script>
 </body>
