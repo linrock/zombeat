@@ -22,7 +22,12 @@ $(document).ready(function() {
 		//score display
 		var score = Crafty.e("2D, DOM, Text")
 			.text("Score: 0")
-			.attr({x: Crafty.viewport.width - 300, y: Crafty.viewport.height - 50, w: 200, h:50})
+			.attr({
+        x: Crafty.viewport.width - 300,
+        y: Crafty.viewport.height - 50,
+        w: 200,
+        h:50
+      })
 			.css({color: "#fff"});
 			
 		//player entity
@@ -196,7 +201,6 @@ $(document).ready(function() {
 					//split into two asteroids by creating another asteroid
 					Crafty.e("2D, DOM, "+size+", Collision, asteroid").attr({x: this._x, y: this._y});
 				});
-				
 			}
 		});
 		
@@ -205,7 +209,6 @@ $(document).ready(function() {
 			var rocks = Crafty.randRange(lower, upper);
 			asteroidCount = rocks;
 			lastCount = rocks;
-			
 			for(var i = 0; i < rocks; i++) {
 				Crafty.e("2D, DOM, big, Collision, asteroid");
 			}

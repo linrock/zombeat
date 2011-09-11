@@ -11,11 +11,9 @@ function get_song_id(artist, title) {
         success: function(data) {
                 //for each song in results, show artist and title and a link to click and get the audio
             $("div#player ul").html('');
-            for(var i=0; i < 5; i++) {
-                console.log(data.response.songs[i].id);
-                var url='http://t06a.hypem.com/sec/85ca98a0e39f004d2130413037a03969/4e6c1d28/archive/509/8/6f9033fb466412eb9893e75c83c2d2bd.mp3';
-                //var url=get_song_url(data.response.songs[i].id);
-                
+            console.dir(data.response);
+            for(var i=0; i < data.response.songs.length; i++) {
+                var url=get_song_url(data.response.songs[i].id);
                 var choice = $('<li><a href="'+ url +'" id="'+data.response.songs[i].id+'">'+data.response.songs[i].artist_name +': '+ data.response.songs[i].title +'</a></li>');
                 $('div#player ul').prepend(choice);
             };
