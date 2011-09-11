@@ -282,7 +282,7 @@ $(document).ready(function() {
 				
 				//if all zombies are gone, start again with more
 				if (Defense.zombieCount <= 0) {
-					spawnZombies(lastCount, lastCount * 2);
+					spawnZombies(lastCount, lastCount * 1.2);
 				}
 			}).collision()
 			.onHit("zombie", function(e) {
@@ -353,7 +353,7 @@ $(document).ready(function() {
           }
           if (frame % (FPS/10) == 0) {
             // Seek out the player!
-            var max_speed = 3;
+            var max_speed = 2;
             var x_dir = player.x-this.x;
             var y_dir = player.y-this.y;
             var m = Math.sqrt(x_dir*x_dir+y_dir*y_dir);
