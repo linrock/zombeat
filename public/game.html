@@ -19,6 +19,7 @@
   <script src="js/libs/crafty-0.4.2.min.js"></script>
   <script src="js/mylibs/song.js"></script>
   <script src="js/mylibs/game.js"></script>
+  <script type="text/javascript" src="js/data.js"></script>
   <script>
     // get_songs();
   </script>
@@ -39,8 +40,14 @@
   <script defer src="js/plugins.js"></script>
   <script defer src="js/script.js"></script>
   <script>
+    var segments = data.segments;
     $("#the-audio").bind('timeupdate', function() {
-      console.log('current:' + this.currentTime + ', duration:' + this.duration);
+      // console.log('current:' + this.currentTime + ', duration:' + this.duration);
+      var time = ~~(this.currentTime);
+      if (segments[time]) {
+        console.log(segments[time]);
+        delete segments[time];
+      }
     });
     $("#the-audio").bind('play', function() {
       console.log('Song playing. Game unpaused:' + Crafty._paused);
