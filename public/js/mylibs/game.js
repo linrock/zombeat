@@ -305,7 +305,7 @@ $(document).ready(function() {
 				this.origin("center");
 				this.attr({
 					x: Crafty.randRange(0, Crafty.viewport.width),
-					y: Crafty.randRange(0, Crafty.viewport.height),
+					y: Crafty.randRange(0, 100),
 					xspeed: Crafty.randRange(-5, 1), 
 					yspeed: Crafty.randRange(1, 1), 
 					rspeed: 0
