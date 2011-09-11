@@ -163,9 +163,42 @@ $(document).ready(function() {
 				if(this.move.left) this.rotation -= 5;
 				
 				// acceleration and movement vector
-				var vx = Math.sin(this._rotation * Math.PI / 180) * 0.3,
-					vy = Math.cos(this._rotation * Math.PI / 180) * 0.3;
+        var angle = this._rotation * Math.PI / 180;
+				var vx = Math.sin(angle) * 0.3,
+            vy = Math.cos(angle) * 0.3;
 				
+        var changePlayerComponent = function(component) {
+          var components = ["front","left","back","right"];
+          for (var i in components) {
+            if (self.has(components[i])) {
+              if (component != components[i]) {
+                self.removeComponent(components[i]).addComponent(component);
+              }
+              break;
+            }
+          }
+        };
+
+        // console.log(angle);
+
+        if ((337.5 < angle && angle < 360) || (angle >= 0 && angle <= 22.5)) {
+
+        } else if (22.5 < angle && angle <= 67.5) {
+
+        } else if (67.5 < angle && angle <= 112.5) {
+
+        } else if (112.5 < angle && angle <= 157.5) {
+
+        } else if (157.5 < angle && angle <= 202.5) {
+
+        } else if (202.5 < angle && angle <= 247.5) {
+
+        } else if (247.5 < angle && angle <= 292.5) {
+
+        } else if (292.5 < angle && angle <= 337.5) {
+
+        }
+
 				// if the move up is true, increment the y/xspeeds
         var max_speed = 5;
         var min_speed = -5;
