@@ -2,6 +2,7 @@ const FPS = 60;
 const SPRITE_DIMS = 48;
 const SPRITES = [
   "img/abg.png",
+  "img/poof.png",
   "img/gifs/sm-front.gif",
   "img/gifs/sm-right.gif",
   "img/gifs/sm-back.gif",
@@ -90,7 +91,7 @@ $(document).ready(function() {
 
 	// preload the needed assets
 	Crafty.load(SPRITES, function() {
-		// splice the spritemap
+    Crafty.sprite(48, "img/poof.png", { poof: [0,0] });
 		Crafty.sprite(32, "img/gifs/sm-front.gif", {  front: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-right.gif", {  right: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-back.gif", {   back: [0,0,1,1.5] });
@@ -291,21 +292,18 @@ $(document).ready(function() {
             this.yspeed = new_y;
           }
 				} else {
-          // if released, slow down the ship
+          // if released, slow down
           this.xspeed *= this.decay;
           this.yspeed *= this.decay;
 				}
 			
-				//move the ship by the x and y speeds or movement vector
+				// Move the x and y speeds or movement vector
 				this.x += this.xspeed;
 				this.y += this.yspeed;
-				
-       
-        var offset = SPRITE_DIMS; 
         this.x = getBoundedX(this._x);
         this.y = getBoundedY(this._y);
 				
-				//if all zombies are gone, start again with more
+				// If all zombies are gone, MORE ZOMBIES
 				if (Defense.zombieCount <= 0) {
 					spawnZombies(lastCount, lastCount * 1.2);
 				}
@@ -341,8 +339,11 @@ $(document).ready(function() {
 					yspeed: Crafty.randRange(1, 1), 
 					rspeed: 0,
           hp: ~~(Defense.wave/2)
-				})
-        .bind("enterframe", function() {
+				});
+        Crafty.e("2D, DOM, spawn, poof").attr({ 
+          x: this._x, y: this._y 
+        });
+        this.bind("enterframe", function() {
 					this.x += this.xspeed;
 					this.y += this.yspeed;
           var abs_x = Math.abs(this.xspeed);
@@ -431,8 +432,20 @@ $(document).ready(function() {
         });
 			}
 		});
+		Crafty.c("spawn", {
+      init: function() {
+        this.opacity = 1;
+        this.bind("enterframe", function() {
+          this.opacity -= 0.05;
+          $(this._element).css({ opacity: this.opacity });
+          if (this.opacity <= 0.05) {
+            this.destroy();
+          }
+        });
+      }
+    });
 		
-		//first level has between 1 and 10 zombies
+		// First level has between 1 and 10 zombies
 		spawnZombies(1, 10);
 	});
 });
