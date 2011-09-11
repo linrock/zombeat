@@ -191,9 +191,14 @@ $(document).ready(function() {
         hp: 100,
         _rotation: 0,
         timers: {
-          invulnerable: 0
+          invulnerable: 0,
+          shot: 0
         },
         shootBullet: function() {
+          var frame = Crafty.frame();
+          if (frame < this.timers.shot + 8) {
+            return;
+          }
 					// Create a bullet entity
 					Crafty.e("2D, DOM, Color, bullet")
 						.attr({
@@ -215,6 +220,7 @@ $(document).ready(function() {
 								this.destroy();
 							}
 						});
+          this.timers.shot = frame;
         }
       })
 			.origin("center")
