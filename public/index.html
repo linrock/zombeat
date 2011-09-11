@@ -30,6 +30,7 @@
     </header>
     <div id="main" role="main">
       <div id="cr-stage">
+        <div id="game-over">Game Over</div>
         <canvas id="dude-canvas"></canvas>
       </div>
       <div class="strobe"></div>
@@ -60,15 +61,17 @@
 
     setInterval(function() {
       var time = $audio.currentTime;
-      var opacity = parseFloat($lightning.css('opacity'));
-      if (opacity > 0) {
-        opacity -= 0.15;
-        if (opacity <= 0.01) {
-          opacity = 0;
+      if (window.Defense && !Defense.gameOver) {
+        var opacity = parseFloat($lightning.css('opacity'));
+        if (opacity > 0) {
+          opacity -= 0.15;
+          if (opacity <= 0.01) {
+            opacity = 0;
+          }
+          $lightning.css({ 'opacity': opacity });
         }
-        $lightning.css({ 'opacity': opacity });
+        $strobe.css({ 'background-color': 'black' });
       }
-      $strobe.css({ 'background-color': 'black' });
       if (time > events[0][0]) {
         console.log(events[0]+"");
         var amplitude = events[0][1];

@@ -20,6 +20,16 @@ body {
   background-color: white;
   opacity: 0;
 }
+#game-over {
+  font-size: 32pt;
+  line-height: 300px;
+  width: 800px;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+  z-index: 20;
+  display: none;
+}
 .strobe {
   border: 2px solid gray;
   width: 64px;

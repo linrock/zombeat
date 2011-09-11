@@ -1,7 +1,6 @@
 const FPS = 60;
 const SPRITE_DIMS = 48;
 const SPRITES = [
-	"img/sprites.png",
   "img/abg.png",
   "img/gifs/sm-front.gif",
   "img/gifs/sm-right.gif",
@@ -29,7 +28,8 @@ $(function() {
 });
 
 var Defense = {
-  zombieCount: 0
+  zombieCount: 0,
+  gameOver: false
 };
 window.Defense = Defense;
 
@@ -94,6 +94,12 @@ $(document).ready(function() {
 
   Crafty.scene("game_over", function() {
 		Crafty.background("url('img/abg.png')");
+    Defense.gameOver = true;
+    $("#dude-canvas").css({
+      'background-color': 'black',
+      opacity: 0.3
+    });
+    $("#game-over").fadeIn('slow');
   });
 
 	Crafty.scene("main", function() {
