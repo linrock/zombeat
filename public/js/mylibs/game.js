@@ -3,6 +3,7 @@ const SPRITE_DIMS = 48;
 const SPRITES = [
   "img/abg.png",
   "img/poof.png",
+  "img/sm-corpse.gif",
   "img/gifs/sm-front.gif",
   "img/gifs/sm-right.gif",
   "img/gifs/sm-back.gif",
@@ -94,6 +95,7 @@ $(document).ready(function() {
 	Crafty.load(SPRITES, function() {
     Crafty.sprite(48, "img/poof.png", { poof: [0,0] });
 
+		Crafty.sprite(32, "img/sm-corpse.gif", {  smcorpse: [0,0,1,0.75] });
 		Crafty.sprite(32, "img/gifs/sm-front.gif", {  front: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-right.gif", {  right: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-back.gif", {   back: [0,0,1,1.5] });
@@ -468,6 +470,11 @@ $(document).ready(function() {
             score.text("Score: "+player.score);
             Defense.zombieCount--;
             this.destroy();
+            if (!is_dog) {
+              Crafty.e("2D, DOM, death, smcorpse").attr({ 
+                x: this._x, y: this._y+24
+              });
+            }
 				  }
           this.x -= 5*this.xspeed;
           this.y -= 5*this.yspeed;
@@ -507,6 +514,18 @@ $(document).ready(function() {
           this.opacity -= 0.04;
           $(this._element).css({ opacity: this.opacity });
           if (this.opacity <= 0.04) {
+            this.destroy();
+          }
+        });
+      }
+    });
+		Crafty.c("death", {
+      init: function() {
+        this.opacity = 1;
+        this.bind("enterframe", function() {
+          this.opacity -= 0.03;
+          $(this._element).css({ opacity: this.opacity });
+          if (this.opacity <= 0.03) {
             this.destroy();
           }
         });
