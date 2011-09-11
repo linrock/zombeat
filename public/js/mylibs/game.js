@@ -218,10 +218,18 @@ $(document).ready(function() {
 					spawnZombies(lastCount, lastCount * 2);
 				}
 			}).collision()
-			.onHit("zombie", function() {
+			.onHit("zombie", function(e) {
+        var vx = this.x-e[0].obj.x;
+        var vy = this.y-e[0].obj.y;
+        var m = Math.sqrt(vx*vx+vy*vy);
+        this.x -= vx/m*2;
+        this.y -= vx/m*2;
+
         var frame = Crafty.frame();
         if (parseInt(player.timers.invulnerable)+(FPS/2) < frame) {
           player.hp -= 10;
+          this.xspeed *= 0.5;
+          this.yspeed *= 0.5;
           player.timers.invulnerable = frame;
           hp.text("HP: "+player.hp);
           // If player gets hit, restart the game
@@ -329,9 +337,9 @@ $(document).ready(function() {
           x_center /= e.length;
           y_center /= e.length;
           for (var i in e) {
-            vx = e[i].obj.x-x_center;
-            vy = e[i].obj.y-y_center;
-            m = Math.sqrt(vx*vx+vy*vy)/2;
+            var vx = e[i].obj.x-x_center;
+            var vy = e[i].obj.y-y_center;
+            var m = Math.sqrt(vx*vx+vy*vy)/2;
             e[i].obj.x += vx/m+(Math.random()*2)-1;
             e[i].obj.y += vy/m+(Math.random()*2)-1;
           }
