@@ -6,6 +6,7 @@
 
 body {
     background: #1b1c1e url(/images/body_bg.png) 50% 0 repeat-y;
+    background-color: black;
     text-align: left;
     font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
     font-size: 16px;
@@ -13,16 +14,16 @@ body {
     color: #AAA;
     margin: 0;
     text-shadow: #000 1px 1px 1px;
-  }
+}
 
 #cr-stage {
-    margin: 0 auto;
-border:2px solid #333;
-border-radius:10px;
+  margin: 0 auto;
+  border:2px solid #333;
 }
 
 audio {
-display:block;
-margin: 15px auto;
+  display:block;
+  margin: 15px auto;
 }
+
 #soundmanager-debug{margin-top:100px;} 

@@ -1,7 +1,27 @@
+var Defense = {
+  zombieCount: 0
+};
+window.Defense = Defense;
+
 $(document).ready(function() {
 	Crafty.init(60, 500, 500);
 	Crafty.canvas();
 	// Crafty.pause();    // Game is paused at first.
+
+  //function to fill the screen with asteroids by a random amount
+  var spawnZombies = function(lower, upper) {
+    var rocks = Crafty.randRange(lower, upper);
+    if (Defense.zombieCount < 50) {
+      Defense.zombieCount += rocks;
+      lastCount = rocks;
+      for(var i = 0; i < rocks; i++) {
+        Crafty.e("2D, DOM, big, Collision, asteroid");
+      }
+    }
+  };
+  var lastCount;    // keep a count of zombies
+		
+  Defense.spawnZombies = spawnZombies;
 
 	// preload the needed assets
 	Crafty.load(["img/asprite.png", "img/abg.png"], function() {
@@ -145,8 +165,8 @@ $(document).ready(function() {
 				}
 				
 				//if all asteroids are gone, start again with more
-				if(asteroidCount <= 0) {
-					initRocks(lastCount, lastCount * 2);
+				if (Defense.zombieCount <= 0) {
+					spawnZombies(lastCount, lastCount * 2);
 				}
 			}).collision()
 			.onHit("asteroid", function() {
@@ -154,17 +174,11 @@ $(document).ready(function() {
         if (parseInt(player.timers.invulnerable)+60 < frame) {
           player.hp -= 10;
           player.timers.invulnerable = frame;
-          console.log(player.timers.invulnerable);
-          console.log('You have been HIT - ' + frame);
           hp.text("HP: "+player.hp);
           // If player gets hit, restart the game
           // Crafty.scene("main");
         }
 			});
-		
-		//keep a count of asteroids
-		var asteroidCount,
-			lastCount;
 		
 		//Asteroid component
 		Crafty.c("asteroid", {
@@ -209,7 +223,7 @@ $(document).ready(function() {
 						this.removeComponent("medium").addComponent("small");
 						size = "small";
 					} else if(this.has("small")) { //if the lowest size, delete self
-						asteroidCount--;
+						Defense.zombieCount--;
 						this.destroy();
 						return;
 					}
@@ -218,23 +232,14 @@ $(document).ready(function() {
 					this.xspeed = -this.yspeed;
 					this.yspeed = oldxspeed;
 					
-					asteroidCount++;
+					Defense.zombieCount++;
 					//split into two asteroids by creating another asteroid
 					Crafty.e("2D, DOM, "+size+", Collision, asteroid").attr({x: this._x, y: this._y});
 				});
 			}
 		});
 		
-		//function to fill the screen with asteroids by a random amount
-		function initRocks(lower, upper) {
-			var rocks = Crafty.randRange(lower, upper);
-			asteroidCount = rocks;
-			lastCount = rocks;
-			for(var i = 0; i < rocks; i++) {
-				Crafty.e("2D, DOM, big, Collision, asteroid");
-			}
-		}
 		//first level has between 1 and 10 asteroids
-		initRocks(1, 10);
+		spawnZombies(1, 10);
 	});
 });

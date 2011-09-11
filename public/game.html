@@ -25,7 +25,7 @@
 <body>
   <div id="container">
     <header>
-      <center><h2>The game</h2></center>
+      <center><h2>Zombie Defense</h2></center>
     </header>
     <div id="main" role="main">
       <div id="cr-stage"></div>
@@ -53,18 +53,23 @@
       var time = this.currentTime;
       if (time > events[0][0]) {
         console.log(events[0]+"");
+        var amplitude = events[0][1];
+        if (amplitude > -20) {
+          console.log('MORE ZOMBIES');
+          Defense.spawnZombies(3,5);
+        }
         events.shift();
       }
     });
     $("#the-audio").bind('play', function() {
       console.log('Song playing. Game unpaused:' + Crafty._paused);
-      if (typeof Crafty._paused === 'undefined' || Crafty._paused === true) {
+      if (Crafty._paused === true) {
         Crafty.pause();
       }
     });
     $("#the-audio").bind('pause', function() {
       console.log('Song paused. Game paused:' + Crafty._paused);
-      if (Crafty._paused === false) {
+      if (Crafty._paused === false || typeof Crafty._paused === 'undefined') {
         Crafty.pause();
       }
     });
