@@ -43,6 +43,18 @@
     </header>
     <div id="main" role="main">
 
+    <div id="search">
+
+<form id="search_form" action="" method="get">
+ <label for="artist">artist</label><input type="text" name="artist" value="" id="artist">
+<label for="title">title</label><input type="text" name="title"  id="title"> 
+
+<input id="song_input" value="find songs" type="submit" />   
+</form>
+</div>
+<div id="choices">
+    
+</div>
     </div>
     <footer>
 
@@ -70,6 +82,7 @@
       load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
     });
   </script>
+  <script src="js/ben.js"></script>
 
 
   <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
