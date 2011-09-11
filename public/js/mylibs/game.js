@@ -69,7 +69,11 @@ $(document).ready(function() {
 		//start the main scene when loaded
 		Crafty.scene("main");
 	});
-	
+
+  Crafty.scene("game_over", function() {
+		Crafty.background("url('img/abg.png')");
+  });
+
 	Crafty.scene("main", function() {
 		Crafty.background("url('img/abg.png')");
 		
@@ -265,8 +269,9 @@ $(document).ready(function() {
           this.yspeed *= 0.5;
           player.timers.invulnerable = frame;
           hp.text("HP: "+player.hp);
-          // If player gets hit, restart the game
-          // Crafty.scene("main");
+        }
+        if (player.hp <= 0) {
+          Crafty.scene("game_over");
         }
 			});
 		
