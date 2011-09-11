@@ -395,8 +395,8 @@ $(document).ready(function() {
         var frame = Crafty.frame();
         if (parseInt(player.timers.invulnerable)+(FPS/2) < frame) {
           player.hp -= 10;
-          this.xspeed *= 0.5;
-          this.yspeed *= 0.5;
+          this.xspeed *= 0.9;
+          this.yspeed *= 0.9;
           player.timers.invulnerable = frame;
           hp.text("HP: "+player.hp);
         }
