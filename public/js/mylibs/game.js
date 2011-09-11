@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	Crafty.init(60, 500, 500);
 	Crafty.canvas();
-	Crafty.pause();    // Game is paused at first.
+	// Crafty.pause();    // Game is paused at first.
 
 	// preload the needed assets
 	Crafty.load(["img/asprite.png", "img/abg.png"], function() {
@@ -27,10 +27,19 @@ $(document).ready(function() {
         x: Crafty.viewport.width - 300,
         y: Crafty.viewport.height - 50,
         w: 200,
-        h:50
+        h: 50
       })
 			.css({color: "#fff"});
-			
+
+    var hp = Crafty.e("2D, DOM, Text")
+      .text("HP: 100")
+      .attr({
+        x: Crafty.viewport.width - 200,
+        y: Crafty.viewport.height - 50,
+        w: 200,
+        h: 50
+      })
+      .css({ color: '#fff' });
 		//player entity
 		var player = Crafty.e("2D, Canvas, ship, Controls, Collision")
 			.attr({
@@ -45,7 +54,11 @@ $(document).ready(function() {
         decay: 0.9, 
         x: Crafty.viewport.width / 2,
         y: Crafty.viewport.height / 2,
-        score: 0
+        score: 0,
+        hp: 100,
+        timers: {
+          invulnerable: 0
+        }
       })
 			.origin("center")
 			.bind("keydown", function(e) {
@@ -137,8 +150,16 @@ $(document).ready(function() {
 				}
 			}).collision()
 			.onHit("asteroid", function() {
-				//if player gets hit, restart the game
-				Crafty.scene("main");
+        var frame = Crafty.frame();
+        if (parseInt(player.timers.invulnerable)+60 < frame) {
+          player.hp -= 10;
+          player.timers.invulnerable = frame;
+          console.log(player.timers.invulnerable);
+          console.log('You have been HIT - ' + frame);
+          hp.text("HP: "+player.hp);
+          // If player gets hit, restart the game
+          // Crafty.scene("main");
+        }
 			});
 		
 		//keep a count of asteroids
@@ -178,7 +199,7 @@ $(document).ready(function() {
 					player.score += 5;
 					score.text("Score: "+player.score);
 					e[0].obj.destroy(); //destroy the bullet
-					
+
 					var size;
 					//decide what size to make the asteroid
 					if(this.has("big")) {
