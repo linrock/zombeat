@@ -9,13 +9,24 @@ const SPRITES = [
   "img/gifs/sm-left.gif",
 ]
 
+const WIDTH = 800;
+const HEIGHT = 500;
+
+var l_context;
+$(function() {
+  l_canvas = $("#dude-canvas")[0];
+  l_canvas.width = WIDTH;
+  l_canvas.height = HEIGHT;
+  l_context = l_canvas.getContext('2d');
+});
+
 var Defense = {
   zombieCount: 0
 };
 window.Defense = Defense;
 
 $(document).ready(function() {
-	Crafty.init(FPS, 800, 500);
+	Crafty.init(FPS, WIDTH, HEIGHT);
 	Crafty.canvas();
 	// Crafty.pause();    // Game is paused at first.
 
@@ -249,18 +260,14 @@ $(document).ready(function() {
           if (Crafty.frame() % FPS == 0) {
             if (abs_x >= abs_y) {
               if (this.xspeed >= 0) {
-                console.log('right')
                 changeComponent("right");
               } else {
-                console.log('left')
                 changeComponent("left");
               }
             } else {
               if (this.yspeed >= 0) {
-                console.log('front')
                 changeComponent("front");
               } else {
-                console.log('back')
                 changeComponent("back");
               }
             }
