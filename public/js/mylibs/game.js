@@ -4,7 +4,7 @@ var Defense = {
 window.Defense = Defense;
 
 $(document).ready(function() {
-	Crafty.init(60, 500, 500);
+	Crafty.init(60, 800, 500);
 	Crafty.canvas();
 	// Crafty.pause();    // Game is paused at first.
 
@@ -103,7 +103,7 @@ $(document).ready(function() {
 							xspeed: 20 * Math.sin(this._rotation / 57.3), 
 							yspeed: 20 * Math.cos(this._rotation / 57.3)
 						})
-						.color("rgb(255, 0, 0)")
+						.color("rgb(255, 255, 0)")
 						.bind("enterframe", function() {	
 							this.x += this.xspeed;
 							this.y -= this.yspeed;
@@ -129,23 +129,38 @@ $(document).ready(function() {
 				if(this.move.right) this.rotation += 5;
 				if(this.move.left) this.rotation -= 5;
 				
-				//acceleration and movement vector
+				// acceleration and movement vector
 				var vx = Math.sin(this._rotation * Math.PI / 180) * 0.3,
 					vy = Math.cos(this._rotation * Math.PI / 180) * 0.3;
 				
-				//if the move up is true, increment the y/xspeeds
+				// if the move up is true, increment the y/xspeeds
+        var max_speed = 5;
+        var min_speed = -5;
+
 				if (this.move.up) {
-					this.yspeed -= vy;
-					this.xspeed += vx;
+          var new_y = this.yspeed-vy;
+          var new_x = this.xspeed+vx;
+          if (new_x > min_speed && new_x < max_speed) {
+            this.xspeed = new_x;
+          }
+          if (new_y > min_speed && new_y < max_speed) {
+            this.yspeed = new_y;
+          }
         } else if (this.move.down) {
-					this.yspeed += vy;
-					this.xspeed -= vx;
+          var new_y = this.yspeed+vy;
+          var new_x = this.xspeed-vx;
+          if (new_x > min_speed && new_x < max_speed) {
+            this.xspeed = new_x;
+          }
+          if (new_y > min_speed && new_y < max_speed) {
+            this.yspeed = new_y;
+          }
 				} else {
-					//if released, slow down the ship
-					this.xspeed *= this.decay;
-					this.yspeed *= this.decay;
+          // if released, slow down the ship
+          this.xspeed *= this.decay;
+          this.yspeed *= this.decay;
 				}
-				
+			
 				//move the ship by the x and y speeds or movement vector
 				this.x += this.xspeed;
 				this.y += this.yspeed;
