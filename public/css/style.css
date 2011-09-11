@@ -19,6 +19,7 @@ body {
   z-index: 10;
   background-color: white;
   opacity: 0;
+  cursor: crosshair;
 }
 #game-over {
   font-size: 40pt;

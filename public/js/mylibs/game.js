@@ -127,7 +127,19 @@ $(document).ready(function() {
   });
 
   var wave_num;
+  var mouseX = 0;
+  var mouseY = 0;
+
 	Crafty.scene("main", function() {
+    $("#dude-canvas")
+    .bind("mousemove", function(e) {
+      mouseX = e.layerX;
+      mouseY = e.layerY;
+    })
+    .bind("mousedown", function() {
+      player.shootBullet();
+    })
+
 		Crafty.background("url('img/abg.png')");
 		
     wave_num = Crafty.e("2D, DOM, Text")
@@ -180,21 +192,9 @@ $(document).ready(function() {
         _rotation: 0,
         timers: {
           invulnerable: 0
-        }
-      })
-			.origin("center")
-			.bind("keydown", function(e) {
-				//on keydown, set the move booleans
-				if(e.keyCode === Crafty.keys.RIGHT_ARROW) {
-					this.move.right = true;
-				} else if(e.keyCode === Crafty.keys.LEFT_ARROW) {
-					this.move.left = true;
-				} else if(e.keyCode === Crafty.keys.UP_ARROW) {
-					this.move.up = true;
-				} else if(e.keyCode === Crafty.keys.DOWN_ARROW) {
-					this.move.down = true;
-				} else if(e.keyCode === Crafty.keys.SPACE) {
-					//create a bullet entity
+        },
+        shootBullet: function() {
+					// Create a bullet entity
 					Crafty.e("2D, DOM, Color, bullet")
 						.attr({
 							x: this._x+SPRITE_DIMS/2,
@@ -210,26 +210,59 @@ $(document).ready(function() {
 							this.x += this.xspeed;
 							this.y -= this.yspeed;
 							
-							//destroy if it goes out of bounds
+							// Destroy if it goes out of bounds
 							if(this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
 								this.destroy();
 							}
 						});
+        }
+      })
+			.origin("center")
+			.bind("keydown", function(e) {
+				//on keydown, set the move booleans
+				if(e.keyCode === Crafty.keys.RIGHT_ARROW || e.keyCode === Crafty.keys.D) {
+					this.move.right = true;
+				} else if(e.keyCode === Crafty.keys.LEFT_ARROW || e.keyCode === Crafty.keys.A) {
+					this.move.left = true;
+				} else if(e.keyCode === Crafty.keys.UP_ARROW || e.keyCode === Crafty.keys.W) {
+					this.move.up = true;
+				} else if(e.keyCode === Crafty.keys.DOWN_ARROW || e.keyCode === Crafty.keys.S) {
+					this.move.down = true;
+				} else if(e.keyCode === Crafty.keys.SPACE) {
+          this.shootBullet();
 				}
 			}).bind("keyup", function(e) {
 				//on key up, set the move booleans to false
-				if (e.keyCode === Crafty.keys.RIGHT_ARROW) {
+				if (e.keyCode === Crafty.keys.RIGHT_ARROW || e.keyCode === Crafty.keys.D) {
 					this.move.right = false;
-				} else if(e.keyCode === Crafty.keys.LEFT_ARROW) {
+				} else if(e.keyCode === Crafty.keys.LEFT_ARROW || e.keyCode === Crafty.keys.A) {
 					this.move.left = false;
-				} else if(e.keyCode === Crafty.keys.UP_ARROW) {
+				} else if(e.keyCode === Crafty.keys.UP_ARROW || e.keyCode === Crafty.keys.W) {
 					this.move.up = false;
-				} else if(e.keyCode === Crafty.keys.DOWN_ARROW) {
+				} else if(e.keyCode === Crafty.keys.DOWN_ARROW || e.keyCode === Crafty.keys.S) {
 					this.move.down = false;
 				}
 			}).bind("enterframe", function() {
-				if(this.move.right) this._rotation += 5;
-				if(this.move.left) this._rotation -= 5;
+				// if(this.move.right) this._rotation += 5;
+				// if(this.move.left) this._rotation -= 5;
+        if (Crafty.frame() % 5 == 0) {
+          y_angle = -(mouseY - this._y);
+          x_angle = mouseX - this._x;
+          var atan = Math.atan(y_angle/x_angle)*180/Math.PI;
+          if (y_angle > 0 && x_angle > 0) {
+            // yes
+            this._rotation = 90-atan;
+          } else if (y_angle > 0 && x_angle < 0) {
+            // yes
+            this._rotation = 270-atan;
+          } else if (y_angle < 0 && x_angle > 0) {
+            // no
+            this._rotation = -atan-270;
+          } else if (y_angle < 0 && x_angle < 0) {
+            // yes
+            this._rotation = 360-atan-90;
+          }
+        }
         if (this._rotation < 0) {
           this._rotation += 360;
         } else if (this._rotation > 360) {
@@ -276,27 +309,16 @@ $(document).ready(function() {
         }
 
 				// if the move up is true, increment the y/xspeeds
-        var max_speed = 5;
-        var min_speed = -5;
+        var max_speed = 4;
 
 				if (this.move.up) {
-          var new_y = this.yspeed-vy;
-          var new_x = this.xspeed+vx;
-          if (new_x > min_speed && new_x < max_speed) {
-            this.xspeed = new_x;
-          }
-          if (new_y > min_speed && new_y < max_speed) {
-            this.yspeed = new_y;
-          }
+          this.yspeed = -max_speed;
         } else if (this.move.down) {
-          var new_y = this.yspeed+vy;
-          var new_x = this.xspeed-vx;
-          if (new_x > min_speed && new_x < max_speed) {
-            this.xspeed = new_x;
-          }
-          if (new_y > min_speed && new_y < max_speed) {
-            this.yspeed = new_y;
-          }
+          this.yspeed = max_speed;
+        } else if (this.move.left) {
+          this.xspeed = -max_speed;
+        } else if (this.move.right) {
+          this.xspeed = max_speed;
 				} else {
           // if released, slow down
           this.xspeed *= this.decay;
