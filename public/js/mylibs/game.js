@@ -39,6 +39,7 @@ var Defense = {
   zombieCount: 0,
   gameOver: false,
   wave: 0,
+  player: false,
   nextWave: false
 };
 window.Defense = Defense;
@@ -124,6 +125,8 @@ $(document).ready(function() {
       opacity: 0.3
     });
     $("#game-over").fadeIn('slow');
+    $("#score-num").text(Defense.player.score);
+    $("#game-over-score").fadeIn('slow');
   });
 
   var wave_num;
@@ -361,7 +364,8 @@ $(document).ready(function() {
           Crafty.scene("game_over");
         }
 			});
-		
+		Defense.player = player;
+
 		//zombie component
 		Crafty.c("zombie", {
 			init: function() {

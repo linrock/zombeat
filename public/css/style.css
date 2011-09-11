@@ -32,6 +32,18 @@ body {
   display: none;
   position: absolute;
 }
+#game-over-score {
+  color: "#373737";
+  font-size: 30pt;
+  line-height: 400px;
+  width: 800px;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+  z-index: 20;
+  display: none;
+  position: absolute;
+}
 #wave-indicator {
   font-size: 32pt;
   font-weight: bold;
