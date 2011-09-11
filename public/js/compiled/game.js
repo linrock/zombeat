@@ -1,7 +1,3 @@
 (function() {
-  var GameLoop;
-  GameLoop = (function() {
-    function GameLoop() {}
-    return GameLoop;
-  })();
+  Crafty.init(500, 400);
 }).call(this);

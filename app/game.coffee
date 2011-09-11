@@ -1,4 +1,1 @@
-class GameLoop
-  constructor: ->
-
-
+Crafty.init(500,400)
