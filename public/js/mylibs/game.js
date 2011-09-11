@@ -207,7 +207,7 @@ $(document).ready(function() {
 						.attr({
 							x: this._x+SPRITE_DIMS/2,
 							y: this._y+SPRITE_DIMS/2,
-							w: 2, 
+							w: 5, 
 							h: 5, 
 							rotation: this._rotation, 
 							xspeed: 20 * Math.sin(this._rotation / 57.3), 
