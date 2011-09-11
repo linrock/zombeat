@@ -33,7 +33,7 @@ $(function() {
 var Defense = {
   zombieCount: 0,
   gameOver: false,
-  wave: 1,
+  wave: 0,
   nextWave: false
 };
 window.Defense = Defense;
@@ -299,7 +299,7 @@ $(document).ready(function() {
 				
 				//if all zombies are gone, start again with more
 				if (Defense.zombieCount <= 0) {
-					spawnZombies(lastCount, lastCount * 2);
+					spawnZombies(lastCount/2, lastCount);
 				}
 			}).collision()
 			.onHit("zombie", function(e) {
@@ -332,7 +332,7 @@ $(document).ready(function() {
 					xspeed: Crafty.randRange(-5, 1), 
 					yspeed: Crafty.randRange(1, 1), 
 					rspeed: 0,
-          hp: Defense.wave
+          hp: ~~(Defense.wave/2)
 				})
         .bind("enterframe", function() {
 					this.x += this.xspeed;
