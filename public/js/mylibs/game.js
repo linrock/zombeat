@@ -198,18 +198,19 @@ $(document).ready(function() {
 				this.x += this.xspeed;
 				this.y += this.yspeed;
 				
-				//if ship goes out of bounds, put him back
-				if(this._x > Crafty.viewport.width) {
-					this.x = -64;
+       
+        var offset = SPRITE_DIMS/2; 
+				if(this._x > Crafty.viewport.width-offset) {
+					this.x = Crafty.viewport.width-offset;
 				}
-				if(this._x < -64) {
-					this.x = Crafty.viewport.width;
+				if(this._x < 0-offset) {
+					this.x = 0-offset;
 				}
-				if(this._y > Crafty.viewport.height) {
-					this.y = -64;
+				if(this._y > Crafty.viewport.height-offset) {
+					this.y = Crafty.viewport.height-offset;
 				}
-				if(this._y < -64) {
-					this.y = Crafty.viewport.height;
+				if(this._y < 0-offset) {
+					this.y = 0-offset;
 				}
 				
 				//if all zombies are gone, start again with more
@@ -286,18 +287,19 @@ $(document).ready(function() {
             this.yspeed = y_dir*max_speed;
           }
 
-					if(this._x > Crafty.viewport.width) {
-						this.x = -64;
-					}
-					if(this._x < -64) {
-						this.x =  Crafty.viewport.width;
-					}
-					if(this._y > Crafty.viewport.height) {
-						this.y = -64;
-					}
-					if(this._y < -64) {
-						this.y = Crafty.viewport.height;
-					}
+          var offset = SPRITE_DIMS/2; 
+          if(this._x > Crafty.viewport.width-offset) {
+            this.x = Crafty.viewport.width-offset;
+          }
+          if(this._x < 0-offset) {
+            this.x = 0-offset;
+          }
+          if(this._y > Crafty.viewport.height-offset) {
+            this.y = Crafty.viewport.height-offset;
+          }
+          if(this._y < 0-offset) {
+            this.y = 0-offset;
+          }
 				}).collision()
 				.onHit("bullet", function(e) {
 					//if hit by a bullet increment the score
@@ -313,7 +315,28 @@ $(document).ready(function() {
 
 					// Split into two zombies by creating another zombie
 					// Crafty.e("2D, DOM, "+size+", Collision, zombie").attr({x: this._x, y: this._y});
-				});
+				})
+        .onHit("zombie", function(e) {
+          if (e.length <= 1) {
+            return;
+          }
+          var x_center = 0;
+          var y_center = 0;
+          for (var i in e) {
+            x_center += e[i].obj.x;
+            y_center += e[i].obj.y;
+          }
+          x_center /= e.length;
+          y_center /= e.length;
+          for (var i in e) {
+            vx = e[i].obj.x-x_center;
+            vy = e[i].obj.y-y_center;
+            m = Math.sqrt(vx*vx+vy*vy)/2;
+            e[i].obj.x += vx/m+(Math.random()*2)-1;
+            e[i].obj.y += vy/m+(Math.random()*2)-1;
+          }
+          if (Crafty.frame() % 60 == 0) { }
+        });
 			}
 		});
 		
