@@ -1,5 +1,5 @@
 const FPS = 60;
-const SPRITE_DIMS = 64;
+const SPRITE_DIMS = 48;
 const SPRITES = [
 	"img/sprites.png",
   "img/abg.png",
@@ -49,6 +49,24 @@ $(document).ready(function() {
       }
     }
   };
+
+  var getBoundedX = function(x) {
+    if (x < 0) {
+      x = 0;
+    } else if (x > Crafty.viewport.width-SPRITE_DIMS*0.67) {
+      x = Crafty.viewport.width-SPRITE_DIMS*0.67;
+    }
+    return x;
+  };
+  var getBoundedY = function(y) {
+    if (y < 0) {
+      y = 0;
+    } else if (y > Crafty.viewport.height-SPRITE_DIMS) {
+      y = Crafty.viewport.height-SPRITE_DIMS;
+    }
+    return y;
+  };
+
   var lastCount;    // keep a count of zombies
 		
   Defense.spawnZombies = spawnZombies;
@@ -62,13 +80,13 @@ $(document).ready(function() {
 		Crafty.sprite(32, "img/gifs/sm-left.gif", {   left: [0,0,1,1.5] });
 
 		Crafty.sprite(32, "img/gifs/main-1.gif", { main1: [0,0,1,1.5] });
-		Crafty.sprite(48, "img/gifs/main-2.gif", { main2: [0,0] });
-		Crafty.sprite(48, "img/gifs/main-3.gif", { main3: [0,0] });
-		Crafty.sprite(48, "img/gifs/main-4.gif", { main4: [0,0] });
-		Crafty.sprite(48, "img/gifs/main-5.gif", { main5: [0,0] });
-		Crafty.sprite(48, "img/gifs/main-6.gif", { main6: [0,0] });
-		Crafty.sprite(48, "img/gifs/main-7.gif", { main7: [0,0] });
-		Crafty.sprite(48, "img/gifs/main-8.gif", { main8: [0,0] });
+		Crafty.sprite(32, "img/gifs/main-2.gif", { main2: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/main-3.gif", { main3: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/main-4.gif", { main4: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/main-5.gif", { main5: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/main-6.gif", { main6: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/main-7.gif", { main7: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/main-8.gif", { main8: [0,0,1,1.5] });
 
 		//start the main scene when loaded
 		Crafty.scene("main");
@@ -198,7 +216,6 @@ $(document).ready(function() {
           }
         };
 
-
         if (Crafty.frame() % (FPS/10) == 0) {
           var angle = this._rotation;
           if ((337.5 < angle && angle < 360) || (angle >= 0 && angle <= 22.5)) {
@@ -253,19 +270,9 @@ $(document).ready(function() {
 				this.y += this.yspeed;
 				
        
-        var offset = SPRITE_DIMS/2; 
-				if(this._x > Crafty.viewport.width-offset) {
-					this.x = Crafty.viewport.width-offset;
-				}
-				if(this._x < 0-offset) {
-					this.x = 0-offset;
-				}
-				if(this._y > Crafty.viewport.height-offset) {
-					this.y = Crafty.viewport.height-offset;
-				}
-				if(this._y < 0-offset) {
-					this.y = 0-offset;
-				}
+        var offset = SPRITE_DIMS; 
+        this.x = getBoundedX(this._x);
+        this.y = getBoundedY(this._y);
 				
 				//if all zombies are gone, start again with more
 				if (Defense.zombieCount <= 0) {
@@ -276,8 +283,8 @@ $(document).ready(function() {
         var vx = this.x-e[0].obj.x;
         var vy = this.y-e[0].obj.y;
         var m = Math.sqrt(vx*vx+vy*vy);
-        this.x -= vx/m*2;
-        this.y -= vx/m*2;
+        this.x = getBoundedX(this.x-vx/m*2);
+        this.y = getBoundedY(this.y-vy/m*2);
 
         var frame = Crafty.frame();
         if (parseInt(player.timers.invulnerable)+(FPS/2) < frame) {
@@ -298,7 +305,7 @@ $(document).ready(function() {
 				this.origin("center");
 				this.attr({
 					x: Crafty.randRange(0, Crafty.viewport.width),
-					y: Crafty.randRange(0, Crafty.viewport.height),
+					y: Crafty.randRange(0, 100),
 					xspeed: Crafty.randRange(-5, 1), 
 					yspeed: Crafty.randRange(1, 1), 
 					rspeed: 0
@@ -349,20 +356,8 @@ $(document).ready(function() {
             this.xspeed = x_dir*max_speed;
             this.yspeed = y_dir*max_speed;
           }
-
-          var offset = SPRITE_DIMS/2; 
-          if(this._x > Crafty.viewport.width-offset) {
-            this.x = Crafty.viewport.width-offset;
-          }
-          if(this._x < 0-offset) {
-            this.x = 0-offset;
-          }
-          if(this._y > Crafty.viewport.height-offset) {
-            this.y = Crafty.viewport.height-offset;
-          }
-          if(this._y < 0-offset) {
-            this.y = 0-offset;
-          }
+          this.x = getBoundedX(this._x);
+          this.y = getBoundedY(this._y);
 				}).collision()
 				.onHit("bullet", function(e) {
 					//if hit by a bullet increment the score
@@ -395,8 +390,8 @@ $(document).ready(function() {
             var vx = e[i].obj.x-x_center;
             var vy = e[i].obj.y-y_center;
             var m = Math.sqrt(vx*vx+vy*vy)/2;
-            e[i].obj.x += vx/m+(Math.random()*2)-1;
-            e[i].obj.y += vy/m+(Math.random()*2)-1;
+            e[i].obj.x = getBoundedX(e[i].obj.x + vx/m+(Math.random()*2)-1);
+            e[i].obj.y = getBoundedY(e[i].obj.y + vy/m+(Math.random()*2)-1);
           }
           if (Crafty.frame() % 60 == 0) { }
         });
