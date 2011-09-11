@@ -29,6 +29,7 @@
     </header>
     <div id="main" role="main">
       <div id="cr-stage"></div>
+      <div class="strobe"></div>
       <audio id="the-audio" src="data/prison-song.mp3" controls preload></audio>
     </div>
     <footer></footer>
@@ -46,21 +47,27 @@
         events.push(results);
       }
     }
+    var $strobe = $(".strobe");
+    var $audio = $("#the-audio")[0];
+
     // timeupdate is once every 250ms or so. Better way would be to use
     // setInterval and polling as a way of checking the current time.
-    $("#the-audio").bind('timeupdate', function() {
-      // console.log('current:' + this.currentTime + ', duration:' + this.duration);
-      var time = this.currentTime;
+    $("#the-audio").bind('timeupdate', function() {});
+
+    setInterval(function() {
+      var time = $audio.currentTime;
+      $strobe.css({ 'background-color': 'black' });
       if (time > events[0][0]) {
         console.log(events[0]+"");
         var amplitude = events[0][1];
-        if (amplitude > -20) {
+        if (amplitude > -10) {
           console.log('MORE ZOMBIES');
           Defense.spawnZombies(3,5);
+          $strobe.css({ 'background-color': 'white' });
         }
         events.shift();
       }
-    });
+    }, 100);
     $("#the-audio").bind('play', function() {
       console.log('Song playing. Game unpaused:' + Crafty._paused);
       if (Crafty._paused === true) {

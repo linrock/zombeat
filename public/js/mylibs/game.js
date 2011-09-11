@@ -227,14 +227,12 @@ $(document).ready(function() {
 						this.destroy();
 						return;
 					}
-					
-					var oldxspeed = this.xspeed;
-					this.xspeed = -this.yspeed;
-					this.yspeed = oldxspeed;
-					
-					Defense.zombieCount++;
-					//split into two asteroids by creating another asteroid
-					Crafty.e("2D, DOM, "+size+", Collision, asteroid").attr({x: this._x, y: this._y});
+				
+          this.x -= 5*this.xspeed;
+          this.y -= 5*this.yspeed;
+
+					// Split into two asteroids by creating another asteroid
+					// Crafty.e("2D, DOM, "+size+", Collision, asteroid").attr({x: this._x, y: this._y});
 				});
 			}
 		});
