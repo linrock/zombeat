@@ -105,7 +105,6 @@ $(document).ready(function() {
 					this.yspeed -= vy;
 					this.xspeed += vx;
         } else if (this.move.down) {
-          console.log('dude');
 					this.yspeed += vy;
 					this.xspeed -= vx;
 				} else {

@@ -32,7 +32,7 @@
     </header>
     <div id="main" role="main">
       <div id="cr-stage"></div>
-      <audio id="the-audio" src="music/Tromboon-sample.ogg" controls preload></audio>
+      <audio id="the-audio" src="data/prison-song.mp3" controls preload></audio>
     </div>
     <footer></footer>
   </div>
@@ -44,7 +44,8 @@
       // console.log('current:' + this.currentTime + ', duration:' + this.duration);
       var time = ~~(this.currentTime);
       if (segments[time]) {
-        console.log(segments[time]);
+        // console.log(segments[time]);
+        console.log(segments[time].loudness_max);
         delete segments[time];
       }
     });
