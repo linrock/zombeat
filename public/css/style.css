@@ -57,3 +57,8 @@ audio {
   display: block;
   margin: 15px auto;
 }
+footer {
+  color: #474747;
+  font-size: 0.6em;
+  text-align: center;
+}
