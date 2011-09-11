@@ -78,6 +78,10 @@ $(document).ready(function() {
   var nextWave = function() {
     Defense.wave++;
     wave_num.text("Wave: "+Defense.wave);
+    if (Defense.wave >= 2) {
+      $("#wave-num").text(Defense.wave);
+      $("#wave-indicator").show().fadeOut(2500);
+    }
   };
   Defense.nextWave = nextWave;
   Defense.spawnZombies = spawnZombies;
@@ -92,7 +96,7 @@ $(document).ready(function() {
 		Crafty.sprite(32, "img/gifs/sm-back.gif", {   back: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-left.gif", {   left: [0,0,1,1.5] });
 		
-        Crafty.sprite(32, "img/gifs/main-1.gif", { main1: [0,0,1,1.5] });
+    Crafty.sprite(32, "img/gifs/main-1.gif", { main1: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-2.gif", { main2: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-3.gif", { main3: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-4.gif", { main4: [0,0,1,1.5] });

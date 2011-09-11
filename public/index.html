@@ -31,6 +31,7 @@
     <div id="main" role="main">
       <div id="cr-stage">
         <div id="game-over">Game Over</div>
+        <div id="wave-indicator">Wave <span id="wave-num">0</span></div>
         <canvas id="dude-canvas"></canvas>
       </div>
       <div class="strobe"></div>
@@ -56,7 +57,7 @@
       var start_time = data.sections[i].start;
       waves.push(start_time);
     }
-    var $strobe = $(".strobe");
+    // var $strobe = $(".strobe");
     var $lightning = $("#dude-canvas");
     var $audio = $("#the-audio")[0];
 
@@ -75,14 +76,14 @@
           }
           $lightning.css({ 'opacity': opacity });
         }
-        $strobe.css({ 'background-color': 'black' });
+        // $strobe.css({ 'background-color': 'black' });
       }
       if (time > events[0][0]) {
         // console.log(events[0]+"");
         var amplitude = events[0][1];
         if (amplitude > -5) {
           Defense.spawnZombies(1,2);
-          $strobe.css({ 'background-color': 'white' });
+          // $strobe.css({ 'background-color': 'white' });
           $lightning.css({ 'opacity': 0.4 });
         }
         events.shift();

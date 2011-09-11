@@ -21,7 +21,7 @@ body {
   opacity: 0;
 }
 #game-over {
-  font-size: 32pt;
+  font-size: 40pt;
   line-height: 300px;
   width: 800px;
   text-align: center;
@@ -31,12 +31,25 @@ body {
   display: none;
   position: absolute;
 }
+#wave-indicator {
+  font-size: 32pt;
+  font-weight: bold;
+  line-height: 300px;
+  width: 800px;
+  text-align: center;
+  text-transform: uppercase;
+  color: yellow;
+  z-index: 15;
+  position: absolute;
+  display: none;
+}
 .strobe {
   border: 2px solid gray;
   width: 64px;
   height: 64px;
   background-color: black;
   float: left;
+  display: none;
 }
 
 audio {
