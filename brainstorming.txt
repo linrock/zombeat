@@ -1,0 +1,24 @@
+Achievements: ppl like to stick around until they reach a goal or finish an achievement. SHow a list of possible achievements. During teh game, notify the user of any completed achievements and at the end of teh game, summarize their achievements and the ones they weren't able to get. 
+
+Character creation: make it more personable and get users attached to their characters. (e.g. choose their character's name, and label the character on screen with his name)
+
+enemies: they only come up to the player and dmg by touching. have some animation where they blow up or something (could reuse their spawning animation)
+
+Have to be able to finish the level (need to wait until already mentioned features/powerups are implemented to test this). 
+
+add other enemies on diff levels.
+
+a super power up tha tblows up teh whole screen and all enemies in it. 
+
+changing weapons/getting new weapons as levls progress. 
+
+armor items. 
+
+right now its just you shoot and they chase. change things up. 
+different style bosses: one that shoots stuff at you that u have to avoid. 
+
+not too easy, not too difficult. 1) choose difficulty or 2) make progressively difficult, or visit previous levels with challenges
+
+element of surprise: "A game should be rich in surprises. Repetition in sequence, progress, and events should be strictly avoided"
+
+
