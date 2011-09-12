@@ -9,6 +9,12 @@ upload + play track
 mage blink
 more often power up
 
+other suggestions:
+better gfx
+weapon upgrades
+pickup items to slow zombies or speed up yourself
+health
+
 
 * Terrains affect movement
 * Secret levels
