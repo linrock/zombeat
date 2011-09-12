@@ -25,4 +25,25 @@ health
 * Abilities
   * Blink/Teleport to another part of the map
   * Charge through enemies
+* High scores
+* Beating the level or the game
 
+
+Priorities
+==========
+* Health pickups
+
+
+Ben
+===
+* Everything needs to be FINISHED and pushed out in 12 hours.
+* Come up with specific suggestions on:
+  * How to improve the existing game UI
+    * What users see the first time they visit the site
+    * How the games progresses
+    * Status bar and related stuff
+  * Graphically, how else can the beat be better shown in the game?
+  * What makes the game more fun
+  * What makes people want to come back and play
+  * What makes the game good enough that people would want to share it
+* Ask other people for their comments/opinions on the game as it is and how to improve it.
