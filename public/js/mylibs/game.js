@@ -436,14 +436,14 @@ $(document).ready(function() {
 			init: function() {
         // if (true) {
         if (Defense.wave >= 3 && (Math.random()>0.8)) {
-          var zombie_type = "dog";
+          this.zombie_type = "dog";
           this.removeComponent("front").addComponent("dfront");
         // } else if (true) {
         } else if (Math.random()>0.9) {
-          var zombie_type = "tot";
+          this.zombie_type = "tot";
           this.removeComponent("front").addComponent("tot");
         } else {
-          var zombie_type = "normal";
+          this.zombie_type = "normal";
         }
 				this.origin("center");
 				this.attr({
@@ -486,9 +486,9 @@ $(document).ready(function() {
             });
         };
 
-        if (zombie_type === "dog") {
+        if (this.zombie_type === "dog") {
           this.max_speed *= 1.5;
-        } else if (zombie_type === "tot") {
+        } else if (this.zombie_type === "tot") {
           this.max_speed *= 1.2;
           this.hp += 3;
         }
@@ -502,9 +502,9 @@ $(document).ready(function() {
           var abs_y = Math.abs(this.yspeed);
           var self = this;
 
-          if (zombie_type === "dog") {
+          if (this.zombie_type === "dog") {
             var components = ["dfront","dleft","dback","dright"];
-          } else if (zombie_type === "tot") {
+          } else if (this.zombie_type === "tot") {
             var components = ["tot","tot","tot","tot"];
             if (Crafty.frame() % 60 == 0) {
               this.shootBullet();
@@ -556,17 +556,17 @@ $(document).ready(function() {
           var takeDamage = function(hp) {
             this.hp -= hp;
             if (this.hp <= 0) {
-              if (zombie_type === "normal") {
+              if (this.zombie_type === "normal") {
                 player.score += 100;
                 Crafty.e("2D, DOM, fadeAway, smcorpse").attr({ 
                   x: this._x, y: this._y+24
                 });
-              } else if (zombie_type === "tot") {
+              } else if (this.zombie_type === "tot") {
                 player.score += 350;
                 Crafty.e("2D, DOM, fadeAway, totcorpse").attr({ 
                   x: this._x, y: this._y
                 });
-              } else if (zombie_type === "dog") {
+              } else if (this.zombie_type === "dog") {
                 player.score += 125;
               }
               score.text("Score: "+player.score);
@@ -584,7 +584,7 @@ $(document).ready(function() {
               h: 56
             })
             .onHit("zombie", function(e) {
-              takeDamage.call(e[0].obj, 1);
+              takeDamage.call(e[0].obj, 0.1);
             });
           }
           bullet.destroy();
