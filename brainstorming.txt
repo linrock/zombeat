@@ -29,7 +29,10 @@ choose to be enemy and fight ness
 
 what makes Tilt To Live so addicting? 
     High scores, different power ups, barely avoiding obstacles is exciting. combo points/multiplier
+    organized chaos!
+    homing missles, directional blast, shield that blows up ppl.
+    spikes to kill dots
 
 make it so u can hold down space bar because it gets tiring. don't want the player to get physically tired of playing. if it's too powerful, slow down the max firing speed. 
 
-
+random: tilt to live with dots spawning to the beat would be cool. 
