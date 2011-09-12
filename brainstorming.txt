@@ -21,4 +21,15 @@ not too easy, not too difficult. 1) choose difficulty or 2) make progressively d
 
 element of surprise: "A game should be rich in surprises. Repetition in sequence, progress, and events should be strictly avoided"
 
+brief instructions on how to play.
+
+unlocking new chars
+
+choose to be enemy and fight ness
+
+what makes Tilt To Live so addicting? 
+    High scores, different power ups, barely avoiding obstacles is exciting. combo points/multiplier
+
+make it so u can hold down space bar because it gets tiring. don't want the player to get physically tired of playing. if it's too powerful, slow down the max firing speed. 
+
 
