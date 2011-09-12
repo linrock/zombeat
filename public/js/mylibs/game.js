@@ -479,10 +479,10 @@ $(document).ready(function() {
             var x_dir = player.x-this.x;
             var y_dir = player.y-this.y;
             var m = Math.sqrt(x_dir*x_dir+y_dir*y_dir);
-            x_dir = x_dir/m;
-            y_dir = y_dir/m;
-            this.xspeed = x_dir*this.max_speed;
-            this.yspeed = y_dir*this.max_speed;
+            if (m > 0.01) {
+              this.xspeed = x_dir/m*this.max_speed;
+              this.yspeed = y_dir/m*this.max_speed;
+            }
           }
           this.x = getBoundedX(this._x);
           this.y = getBoundedY(this._y);
