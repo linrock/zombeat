@@ -6,6 +6,7 @@ const SPRITES = [
   "img/boom.png",
   "img/sm-corpse.gif",
   "img/tot-corpse.gif",
+  "img/gifs/heart.gif",
   "img/gifs/powerup.gif",
   "img/gifs/trick-or-treat.gif",
   "img/gifs/sm-front.gif",
@@ -104,7 +105,8 @@ $(document).ready(function() {
 		Crafty.sprite(32, "img/sm-corpse.gif", {  smcorpse: [0,0,1,0.75] });
 		Crafty.sprite(32, "img/tot-corpse.gif", {  totcorpse: [0,0,1,1.5] });
 
-		Crafty.sprite(32, "img/gifs/powerup.gif", { power: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/powerup.gif", { powerup: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/heart.gif", { health: [0,0,1,1] });
 
 		Crafty.sprite(32, "img/gifs/trick-or-treat.gif", { tot: [0,0,1,1.5] });
 
@@ -147,7 +149,32 @@ $(document).ready(function() {
   var mouseX = 0;
   var mouseY = 0;
 
+  var randomlyDropPowerups = function() {
+    var getDropCoordinates = function() {
+      return {
+        x: Crafty.randRange(0+100, Crafty.viewport.width-100),
+        y: Crafty.randRange(0+100, Crafty.viewport.height-100)
+      }
+    };
+    setTimeout(function() {
+      Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
+    }, 0);
+    var i = setInterval(function() {
+      if (Defense.gameOver) {
+        clearInterval(i);
+        return;
+      }
+      if (Math.random() > 0.5) {
+        Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
+      } else if (Math.random() > 0.5) {
+        Crafty.e("2D, DOM, health").attr(getDropCoordinates());
+      }
+    }, 10000);
+  };
+
 	Crafty.scene("main", function() {
+		Crafty.background("url('img/abg.png')");
+
     $("#dude-canvas")
       .bind("mousemove", function(e) {
         mouseX = e.layerX || e.offsetX;
@@ -156,24 +183,8 @@ $(document).ready(function() {
       .bind("mousedown", function() {
         player.shootBullet();
       });
-
-		Crafty.background("url('img/abg.png')");
-   
-    setTimeout(function() {
-      Crafty.e("2D, DOM, power").attr({
-        x: Crafty.randRange(0+100, Crafty.viewport.width-100),
-        y: Crafty.randRange(0+100, Crafty.viewport.height-100)
-      });
-    }, 0);
-
-    setInterval(function() {
-      if (Math.random()>0.75) {
-        Crafty.e("2D, DOM, power").attr({
-          x: Crafty.randRange(0+100, Crafty.viewport.width-100),
-          y: Crafty.randRange(0+100, Crafty.viewport.height-100)
-        });
-      }
-    }, 10000);
+  
+    randomlyDropPowerups();
 
     wave_num = Crafty.e("2D, DOM, Text")
       .text("Wave: 1")
@@ -399,11 +410,16 @@ $(document).ready(function() {
           Crafty.scene("game_over");
         }
 			})
-      .onHit("power", function(e) {
+      .onHit("powerup", function(e) {
         // When a powerup is picked up
 				e[0].obj.destroy();
         // player.powerups.scattershot = Crafty.frame();
         player.powerups.explosive = Crafty.frame();
+      })
+      .onHit("health", function(e) {
+				e[0].obj.destroy();
+        player.hp = 100;
+        hp.text("HP: "+player.hp);
       });
 		Defense.player = player;
 
@@ -518,7 +534,6 @@ $(document).ready(function() {
           };
           var bullet = e[0].obj;
           if (bullet.properties.explosive) {
-            console.log("Explosive bullet baby!");
             Crafty.e("2D, DOM, Collision, boom, fastFadeAway, explosion")
             .attr({
               x: this._x,
