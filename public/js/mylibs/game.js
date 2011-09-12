@@ -150,8 +150,8 @@ $(document).ready(function() {
 	Crafty.scene("main", function() {
     $("#dude-canvas")
       .bind("mousemove", function(e) {
-        mouseX = e.offsetX;
-        mouseY = e.offsetY;
+        mouseX = e.layerX || e.offsetX;
+        mouseY = e.layerY || e.offsetY;
       })
       .bind("mousedown", function() {
         player.shootBullet();
