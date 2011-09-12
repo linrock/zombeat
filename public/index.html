@@ -97,13 +97,12 @@
 
     $("#the-audio")
       .bind('play', function() {
-        console.log('Song playing. Game unpaused:' + Crafty._paused);
+        Defense.songStarted = true;
         if (Crafty._paused === true) {
           Crafty.pause();
         }
       })
       .bind('pause', function() {
-        console.log('Song paused. Game paused:' + Crafty._paused);
         if (Crafty._paused === false || typeof Crafty._paused === 'undefined') {
           Crafty.pause();
         }

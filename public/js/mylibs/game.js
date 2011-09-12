@@ -44,8 +44,9 @@ $(function() {
 
 var Defense = {
   zombieCount: 0,
-  gameOver: false,
   wave: 0,
+  gameOver: false,
+  songStarted: false,
   player: false,
   nextWave: false
 };
@@ -395,7 +396,9 @@ $(document).ready(function() {
 				
 				// If all zombies are gone, MORE ZOMBIES
 				if (Defense.zombieCount <= 0) {
-					spawnZombies(lastCount, lastCount * 1.5);
+          if (!Defense.songStarted) {
+  					spawnZombies(lastCount, lastCount * 1.5);
+          }
 				}
 			}).collision()
 			.onHit("zombie", function(e) {
@@ -646,7 +649,7 @@ $(document).ready(function() {
       }
     });
 		
-		// First level has between 1 and 10 zombies
-		spawnZombies(1, 10);
+		// First level has between 3 and 5 zombies
+		spawnZombies(3, 5);
 	});
 });
