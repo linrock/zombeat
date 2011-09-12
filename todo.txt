@@ -1,0 +1,10 @@
+TODO
+
+walls/obstacles
+dynamic map/tiles
+shield
+pumpkin HP
+high score + name
+upload + play track
+mage blink
+more often power up
