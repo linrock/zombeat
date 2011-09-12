@@ -298,7 +298,8 @@ $(document).ready(function() {
 				}
 			}).bind("enterframe", function() {
         var self = this;  
-        if (Crafty.frame() % 5 == 0) {
+        var slowFrame = Crafty.frame() % 5 == 0;
+        if (slowFrame) {
           y_angle = -(mouseY - this._y);
           x_angle = mouseX - this._x;
           var atan = Math.atan(y_angle/x_angle)*180/Math.PI;
@@ -318,7 +319,7 @@ $(document).ready(function() {
           this._rotation -= 360;
         }
 
-        if (Crafty.frame() % (FPS/10) == 0) {
+        if (slowFrame) {
           var angle = this._rotation;
           var changePlayerComponent = function(component) {
             var components = ["main1","main2","main3","main4","main5","main6","main7","main8"];
@@ -359,15 +360,13 @@ $(document).ready(function() {
         this.yspeed *= this.decay;
 
 				if (this.move.up)     { this.yspeed = -max_speed; }
-        if (this.move.down)   { this.yspeed = max_speed;  }
+        if (this.move.down)   { this.yspeed =  max_speed; }
         if (this.move.left)   { this.xspeed = -max_speed; }
-        if (this.move.right)  { this.xspeed = max_speed;  }
+        if (this.move.right)  { this.xspeed =  max_speed; }
 			
 				// Move the x and y speeds or movement vector
-				this.x += this.xspeed;
-				this.y += this.yspeed;
-        this.x = getBoundedX(this._x);
-        this.y = getBoundedY(this._y);
+        this.x = getBoundedX(this._x + this.xspeed);
+        this.y = getBoundedY(this._y + this.yspeed);
 				
 				// If all zombies are gone, MORE ZOMBIES
 				if (Defense.zombieCount <= 0) {
@@ -378,8 +377,10 @@ $(document).ready(function() {
         var vx = this.x-e[0].obj.x;
         var vy = this.y-e[0].obj.y;
         var m = Math.sqrt(vx*vx+vy*vy);
-        this.x = getBoundedX(this.x-vx/m*2);
-        this.y = getBoundedY(this.y-vy/m*2);
+        if (m > 0.01) {
+          this.x = getBoundedX(this._x+vx/m*2);
+          this.y = getBoundedY(this._y+vy/m*2);
+        }
 
         var frame = Crafty.frame();
         if (parseInt(player.timers.invulnerable)+(FPS/2) < frame) {
@@ -399,7 +400,7 @@ $(document).ready(function() {
       });
 		Defense.player = player;
 
-		//zombie component
+		// Zombie component. Types: normal, tot, dog
 		Crafty.c("zombie", {
 			init: function() {
         // if (true) {
@@ -513,6 +514,8 @@ $(document).ready(function() {
           // });
 				})
         .onHit("zombie", function(e) {
+          // Center of mass collision handling... need to figure out
+          // how people really do collision handling.
           if (e.length <= 1) {
             return;
           }
@@ -531,7 +534,6 @@ $(document).ready(function() {
             e[i].obj.x = getBoundedX(e[i].obj.x + vx/m+(Math.random()*2)-1);
             e[i].obj.y = getBoundedY(e[i].obj.y + vy/m+(Math.random()*2)-1);
           }
-          if (Crafty.frame() % 60 == 0) { }
         });
 			}
 		});
