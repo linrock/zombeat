@@ -8,3 +8,15 @@ high score + name
 upload + play track
 mage blink
 more often power up
+
+
+* Terrains affect movement
+* Secret levels
+  * Monetization
+* Weapons
+  * Slows groups of zombies down
+  * AOE damage over time
+* Abilities
+  * Blink/Teleport to another part of the map
+  * Charge through enemies
+
