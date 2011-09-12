@@ -306,8 +306,8 @@ $(document).ready(function() {
         var self = this;  
         var slowFrame = Crafty.frame() % 5 == 0;
         if (slowFrame) {
-          y_angle = -(mouseY - this._y);
-          x_angle = mouseX - this._x;
+          y_angle = -(mouseY-(this._y+24));
+          x_angle = mouseX-(this._x+16);
           var atan = Math.atan(y_angle/x_angle)*180/Math.PI;
           if (y_angle > 0 && x_angle > 0) {
             this._rotation = 90-atan;
