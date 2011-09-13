@@ -30,7 +30,7 @@ header {
 }
 #intro-page {
   font-size: 12pt;
-  width: 800px;
+  width: 960px;
   display: none;
   position: absolute;
   z-index: 50;
@@ -44,7 +44,7 @@ header {
   width: 600px;
   margin-top: 50px;
   margin-bottom: 50px;
-  margin-left: 150px;
+  margin-left: 230px;
   text-align: left;
   color: #e7e7e7;
 }
@@ -71,7 +71,7 @@ button#play-button:active {
 #game-over {
   font-size: 40pt;
   line-height: 300px;
-  width: 800px;
+  width: 960px;
   text-align: center;
   text-transform: uppercase;
   color: white;
@@ -83,7 +83,7 @@ button#play-button:active {
   color: "#373737";
   font-size: 30pt;
   line-height: 400px;
-  width: 800px;
+  width: 960px;
   text-align: center;
   text-transform: uppercase;
   color: white;
@@ -95,7 +95,7 @@ button#play-button:active {
   font-size: 32pt;
   font-weight: bold;
   line-height: 300px;
-  width: 800px;
+  width: 960px;
   text-align: center;
   text-transform: uppercase;
   color: yellow;

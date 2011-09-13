@@ -1,7 +1,7 @@
 const FPS = 60;
 const SPRITE_DIMS = 48;
 const SPRITES = [
-  "img/abg.png",
+  "img/abg.jpg",
   "img/poof.png",
   "img/boom.png",
   "img/sm-corpse.gif",
@@ -161,7 +161,7 @@ $(function() {
 		Crafty.sprite(32, "img/gifs/main-7.gif", { main7: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-8.gif", { main8: [0,0,1,1.5] });
 	});
-	Crafty.background("url('img/abg.png')");
+	Crafty.background("url('img/abg.jpg')");
 
   Crafty.scene("intro", function() {
     fadeBackground();
