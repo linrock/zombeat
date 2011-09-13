@@ -75,7 +75,7 @@ setInterval(function() {
   if (time > events[0][0]) {
     // console.log(events[0]+"");
     var loudness = events[0][1];
-    console.log(loudness);
+    // console.log(loudness);
     if (loudness >= 0.75) {
       Defense.spawnZombies(1,2);
       Defense.buffZombies();

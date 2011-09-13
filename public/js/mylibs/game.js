@@ -12,6 +12,7 @@ const SPRITES = [
   "img/gifs/possessor.gif",
   "img/gifs/possessor_oj.gif",
   "img/gifs/trick-or-treat.gif",
+  "img/gifs/boss.gif",
   "img/gifs/sm-front.gif",
   "img/gifs/sm-right.gif",
   "img/gifs/sm-back.gif",
@@ -44,6 +45,7 @@ const SHOT_DELAY = 8
 var Defense = {
   zombieCount: 0,
   wave: 0,
+  kills: 0,
   gameOver: false,
   songStarted: false,
   player: false,
@@ -147,11 +149,12 @@ $(function() {
 		Crafty.sprite(32, "img/tot-corpse.gif", {  totcorpse: [0,0,1,1.5] });
 
 		Crafty.sprite(32, "img/gifs/present.gif", { powerup: [0,0,1,1.5] });
-		Crafty.sprite(32, "img/gifs/heart.gif", { health: [0,0,1,1] });
+		Crafty.sprite(32, "img/gifs/heart.gif", { health: [0,0] });
 
 		Crafty.sprite(32, "img/gifs/possessor.gif", { possessor: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/possessor_oj.gif", { fireghost: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/trick-or-treat.gif", { tot: [0,0,1,1.5] });
+		Crafty.sprite(80, "img/gifs/boss.gif", { boss: [0,0] });
 
 		Crafty.sprite(32, "img/gifs/sm-front.gif", {  smfront: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/sm-right.gif", {  smright: [0,0,1,1.5] });
@@ -257,17 +260,18 @@ $(function() {
           } else {
             hSpawnNum++;
           }
-          setTimeout(dropHealth, getTimeInterval()*2.5);
+          setTimeout(dropHealth, getTimeInterval()*2);
         }
       };
       dropPowerup();
       dropHealth();
     })();
 
+    // Status display items
     wave_num = Crafty.e("2D, DOM, Text")
       .text("Wave: 1")
       .attr({
-        x: Crafty.viewport.width - 300,
+        x: Crafty.viewport.width - 400,
         y: 25,
         w: 100,
         h: 25
@@ -277,23 +281,33 @@ $(function() {
     var hp = Crafty.e("2D, DOM, Text")
       .text("HP: 100")
       .attr({
-        x: Crafty.viewport.width - 200,
+        x: Crafty.viewport.width - 320,
         y: 25,
         w: 100,
         h: 25
       })
       .css({ color: '#fff' });
 
-		// Score display
-		var score = Crafty.e("2D, DOM, Text")
-			.text("Score: 0")
+		var kills = Crafty.e("2D, DOM, Text")
+			.text("Kills: 0")
 			.attr({
-        x: Crafty.viewport.width - 100,
+        x: Crafty.viewport.width - 240,
         y: 25,
         w: 100,
         h: 25
       })
 			.css({color: "#fff"});
+
+		var score = Crafty.e("2D, DOM, Text")
+			.text("Score: 0")
+			.attr({
+        x: Crafty.viewport.width - 160,
+        y: 25,
+        w: 100,
+        h: 25
+      })
+			.css({color: "#fff"});
+		
 
 		// The player entity
 		var player = Crafty.e("2D, DOM, main1, Controls, Collision")
@@ -337,15 +351,21 @@ $(function() {
                 rotation: rotation,
                 xspeed: 20 * Math.sin(rotation / 57.3), 
                 yspeed: 20 * Math.cos(rotation / 57.3),
-                properties: properties || {}
+                properties: properties || {},
+                createFrame: Crafty.frame()
               })
               .color("rgb(255, 255, 0)")
               .bind("enterframe", function() {	
                 this.x += this.xspeed;
                 this.y -= this.yspeed;
                 
-                // Destroy if it goes out of bounds
+                // Destroy if it goes out of bounds or is sticking around for some 
+                // stupid reason
                 if (Crafty.frame() % 60 === 0) {
+                  if (Crafty.frame() > this.createFrame+300) {
+                    console.log('WTF bullet');
+                    this.destroy();
+                  }
                   if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
                     this.destroy();
                   }
@@ -372,6 +392,17 @@ $(function() {
           hp.text("HP: "+player.hp);
           if (player.hp <= 0) {
             Crafty.scene("game_over");
+          }
+        },
+        changePlayerComponent: function(component) {
+          var components = ["main1","main2","main3","main4","main5","main6","main7","main8"];
+          for (var i in components) {
+            if (this.has(components[i])) {
+              if (component != components[i]) {
+                this.removeComponent(components[i]).addComponent(component);
+              }
+              break;
+            }
           }
         }
       })
@@ -403,7 +434,6 @@ $(function() {
           this.shooting = false;
         }
 			}).bind("enterframe", function() {
-        var self = this;  
         var slowFrame = Crafty.frame() % 5 == 0;
         if (slowFrame) {
           y_angle = -(mouseY-(this._y+24));
@@ -427,18 +457,7 @@ $(function() {
 
         if (slowFrame) {
           var angle = this._rotation;
-          var changePlayerComponent = function(component) {
-            var components = ["main1","main2","main3","main4","main5","main6","main7","main8"];
-            for (var i in components) {
-              if (self.has(components[i])) {
-                if (component != components[i]) {
-                  self.removeComponent(components[i]).addComponent(component);
-                }
-                break;
-              }
-            }
-          };
-          changePlayerComponent(function() {
+          this.changePlayerComponent(function() {
             if ((337.5 < angle && angle < 360) || (angle >= 0 && angle <= 22.5)) {
               return 'main5';
             } else if (22.5 < angle && angle <= 67.5) {
@@ -521,16 +540,16 @@ $(function() {
 		// Zombie component. Types: normal, tot, dog
 		Crafty.c("zombie", {
 			init: function() {
-        if (Defense.wave >= 2 && (Math.random()>0.8)) {
+        if (Defense.wave >= 2 && (Math.random()>0.5)) {
           this.zombie_type = "possessor";
           this.removeComponent("smfront").addComponent("possessor");
-        } else if (Defense.wave >= 3 && Math.random()>0.95) {
+        } else if (Defense.wave >= 3 && Math.random()>0.9) {
           this.zombie_type = "tot";
           this.removeComponent("smfront").addComponent("tot");
-        } else if (Defense.wave >= 4 && Math.random()>0.95) {
+        } else if (Defense.wave >= 4 && Math.random()>0.9) {
           this.zombie_type = "dog";
           this.removeComponent("smfront").addComponent("dfront");
-        } else if (Defense.wave >= 5 && Math.random()>0.5 && enemyCounts.fireghosts < 2) {
+        } else if (Defense.wave >= 5 && Math.random()>0.95 && enemyCounts.fireghosts < 2) {
           this.zombie_type = "fireghost";
           this.removeComponent("smfront").addComponent("fireghost");
           enemyCounts.fireghosts++;
@@ -546,43 +565,56 @@ $(function() {
 					rspeed: 0,
           max_speed: ZOMBIE_MAX_SPEED,
           hp: ~~(Defense.wave/2),
-          frameOffset: ~~(Math.random()*FPS)
-				});
-        this.shootEnemyBullet = function(direction) {
-          var origin_x = this._x+SPRITE_DIMS/2;
-          var origin_y = this._y+SPRITE_DIMS/2;
+          frameOffset: ~~(Math.random()*FPS),
+          shootEnemyBullet: function(options) {
+            var options = options || {};
+            var color = options.color || "rgb(255,0,0)";
 
-          if (direction) {
-            var xv = direction[0];
-            var yv = direction[1];
-          } else {
-            var xv = player._x-origin_x;
-            var yv = -(player._y-origin_y);
-          }
-          var m = Math.sqrt(xv*xv+yv*yv);
-          
-          Crafty.e("2D, DOM, Color, enemybullet")
-            .attr({
-              x: origin_x,
-              y: origin_y,
-              w: 6,
-              h: 6,
-              xspeed: 7 * xv/m,
-              yspeed: 7 * yv/m
-            })
-            .color("rgb(255, 0, 0)")
-            .bind("enterframe", function() {
-              this.x += this.xspeed;
-              this.y -= this.yspeed;
-              
-              // Destroy if it goes out of bounds
-              if ((Crafty.frame()+this.frameOffset) % 60 === 0) {
-                if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
-                  this.destroy();
+            var origin_x = this._x+SPRITE_DIMS/2;
+            var origin_y = this._y+SPRITE_DIMS/2;
+
+            if (options.direction) {
+              var xv = options.direction[0];
+              var yv = options.direction[1];
+            } else {
+              var xv = player._x-origin_x;
+              var yv = -(player._y-origin_y);
+            }
+            var m = Math.sqrt(xv*xv+yv*yv);
+            
+            Crafty.e("2D, DOM, Color, enemybullet")
+              .attr({
+                x: origin_x,
+                y: origin_y,
+                w: 6,
+                h: 6,
+                xspeed: 7 * xv/m,
+                yspeed: 7 * yv/m
+              })
+              .color(color)
+              .bind("enterframe", function() {
+                this.x += this.xspeed;
+                this.y -= this.yspeed;
+                
+                // Destroy if it goes out of bounds
+                if ((Crafty.frame()+this.frameOffset) % 60 === 0) {
+                  if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+                    this.destroy();
+                  }
                 }
+              });
+          },
+          changeEnemyComponent: function(components, component) {
+            for (var i in components) {
+              if (this.has(components[i])) {
+                if (component != components[i]) {
+                  this.removeComponent(components[i]).addComponent(component);
+                }
+                break;
               }
-            });
-        };
+            }
+          }
+				});
 
         if (this.zombie_type === "dog") {
           this.max_speed *= 2;
@@ -604,7 +636,6 @@ $(function() {
 					this.y += this.yspeed;
           var abs_x = Math.abs(this.xspeed);
           var abs_y = Math.abs(this.yspeed);
-          var self = this;
 
           if (this.zombie_type === "dog") {
             var components = ["dfront","dleft","dback","dright"];
@@ -613,30 +644,20 @@ $(function() {
           } else {
             var components = ["smfront","smleft","smback","smright"];
           }
-          var changeComponent = function(component) {
-            for (var i in components) {
-              if (self.has(components[i])) {
-                if (component != components[i]) {
-                  self.removeComponent(components[i]).addComponent(component);
-                }
-                break;
-              }
-            }
-          };
           var frame = Crafty.frame();
           if (frame % FPS == 0) {
             // Change direction they're facing
             if (abs_x >= abs_y) {
               if (this.xspeed >= 0) {
-                changeComponent(components[3]);
+                this.changeEnemyComponent(components, components[3]);
               } else {
-                changeComponent(components[1]);
+                this.changeEnemyComponent(components, components[1]);
               }
             } else {
               if (this.yspeed >= 0) {
-                changeComponent(components[0]);
+                this.changeEnemyComponent(components, components[0]);
               } else {
-                changeComponent(components[2]);
+                this.changeEnemyComponent(components, components[2]);
               }
             }
           }
@@ -692,6 +713,8 @@ $(function() {
               }
               score.text("Score: "+player.score);
               Defense.zombieCount--;
+              Defense.kills++;
+              kills.text("Kills: "+Defense.kills);
               this.destroy();
             }
           };
@@ -730,7 +753,7 @@ $(function() {
               this.max_speed += 0.2;
             }
           } else if (this.zombie_type === 'tot') {
-            this.shootEnemyBullet();
+            this.shootEnemyBullet({ color: "#FBB117" });
           } else if (this.zombie_type === 'possessor') {
             var m = Math.sqrt(this.xspeed*this.xspeed+this.yspeed*this.yspeed);
             this.x += 25*this.xspeed/m;
@@ -745,10 +768,10 @@ $(function() {
             if (this.xspeed <= 1 && this.yspeed <= 1) {
               this.max_speed += 0.1;
             }
-            this.shootEnemyBullet([0.5,0.5]);
-            this.shootEnemyBullet([0.5,-0.5]);
-            this.shootEnemyBullet([-0.5,0.5]);
-            this.shootEnemyBullet([-0.5,-0.5]);
+            this.shootEnemyBullet({ direction: [0.5,0.5] });
+            this.shootEnemyBullet({ direction: [0.5,-0.5] });
+            this.shootEnemyBullet({ direction: [-0.5,0.5] });
+            this.shootEnemyBullet({ direction: [-0.5,-0.5] });
           }
         })
         .onHit("zombie", function(e) {
@@ -781,7 +804,7 @@ $(function() {
         this.bind("enterframe", function() {
           this.opacity -= 0.03;
           $(this._element).css({ opacity: this.opacity });
-          if (this.opacity <= 0.03) {
+          if (this.opacity <= 0.031) {
             this.destroy();
           }
         });
@@ -793,7 +816,7 @@ $(function() {
         this.bind("enterframe", function() {
           this.opacity -= 0.1;
           $(this._element).css({ opacity: this.opacity });
-          if (this.opacity <= 0.1) {
+          if (this.opacity <= 0.11) {
             this.destroy();
           }
         });
