@@ -655,6 +655,10 @@ $(function() {
             }
             this.x += 2*this.xspeed;
             this.y += 2*this.yspeed;
+          } else if (this.zombie_type === 'dog') {
+            if (this.max_speed < PLAYER_MAX_SPEED+1) {
+              this.max_speed += 0.2;
+            }
           } else if (this.zombie_type === 'tot') {
             this.shootEnemyBullet();
           }
