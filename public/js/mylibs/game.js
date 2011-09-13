@@ -259,7 +259,7 @@ $(function() {
           } else {
             hSpawnNum++;
           }
-          setTimeout(dropHealth, getTimeInterval()*2.5);
+          setTimeout(dropHealth, getTimeInterval()*2);
         }
       };
       dropPowerup();
@@ -339,15 +339,21 @@ $(function() {
                 rotation: rotation,
                 xspeed: 20 * Math.sin(rotation / 57.3), 
                 yspeed: 20 * Math.cos(rotation / 57.3),
-                properties: properties || {}
+                properties: properties || {},
+                createFrame: Crafty.frame()
               })
               .color("rgb(255, 255, 0)")
               .bind("enterframe", function() {	
                 this.x += this.xspeed;
                 this.y -= this.yspeed;
                 
-                // Destroy if it goes out of bounds
+                // Destroy if it goes out of bounds or is sticking around for some 
+                // stupid reason
                 if (Crafty.frame() % 60 === 0) {
+                  if (Crafty.frame() > this.createFrame+300) {
+                    console.log('WTF bullet');
+                    this.destroy();
+                  }
                   if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
                     this.destroy();
                   }
@@ -784,7 +790,7 @@ $(function() {
         this.bind("enterframe", function() {
           this.opacity -= 0.03;
           $(this._element).css({ opacity: this.opacity });
-          if (this.opacity <= 0.03) {
+          if (this.opacity <= 0.031) {
             this.destroy();
           }
         });
@@ -796,7 +802,7 @@ $(function() {
         this.bind("enterframe", function() {
           this.opacity -= 0.1;
           $(this._element).css({ opacity: this.opacity });
-          if (this.opacity <= 0.1) {
+          if (this.opacity <= 0.11) {
             this.destroy();
           }
         });
