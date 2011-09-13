@@ -655,6 +655,15 @@ $(function() {
                 });
               } else if (this.zombie_type === "dog") {
                 player.score += 125;
+                var components = ["dfront", "dleft", "dback", "dright"];
+                for (var i in components) {
+                  if (this.has(components[i])) {
+                    Crafty.e("2D, DOM, fadeAway, " + components[i]).attr({
+                      x: this._x, y: this._y
+                    });
+                    break;
+                  }
+                }
               }
               score.text("Score: "+player.score);
               Defense.zombieCount--;
