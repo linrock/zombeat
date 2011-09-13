@@ -67,7 +67,7 @@ $(function() {
 	// Crafty.pause();    // Game is paused at first.
   var enemyCounts = {
     fireghosts: 0,
-    eviltent: 0
+    boss: 0
   }
 
   //function to fill the screen with zombies by a random amount
@@ -540,7 +540,11 @@ $(function() {
 		// Zombie component. Types: normal, tot, dog
 		Crafty.c("zombie", {
 			init: function() {
-        if (Defense.wave >= 2 && (Math.random()>0.5)) {
+        if (Defense.wave >= 6 && enemyCounts.boss === 0) {
+          this.zombie_type = "boss";
+          this.removeComponent("smfront").addComponent("boss");
+          enemyCounts.boss++;
+        } else if (Defense.wave >= 2 && (Math.random()>0.5)) {
           this.zombie_type = "possessor";
           this.removeComponent("smfront").addComponent("possessor");
         } else if (Defense.wave >= 3 && Math.random()>0.9) {
@@ -616,6 +620,10 @@ $(function() {
           }
 				});
 
+        if (this.zombie_type === "boss") {
+          this.max_speed *= 0.5;
+          this.hp += 20;
+        }
         if (this.zombie_type === "dog") {
           this.max_speed *= 2;
         } else if (this.zombie_type === "tot") {
@@ -772,6 +780,10 @@ $(function() {
             this.shootEnemyBullet({ direction: [0.5,-0.5] });
             this.shootEnemyBullet({ direction: [-0.5,0.5] });
             this.shootEnemyBullet({ direction: [-0.5,-0.5] });
+          } else if (this.zombie_type === 'boss') {
+            if (this.hp < 20) {
+              this.hp += 2;
+            }
           }
         })
         .onHit("zombie", function(e) {
