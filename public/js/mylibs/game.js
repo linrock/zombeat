@@ -210,7 +210,7 @@ $(function() {
   Crafty.scene("you_win", function() {
     Defense.gameOver = true;
     fadeBackground();
-    $("#game-over").text("You Win").fadeIn('slow');
+    $("#game-over").text("You Win!!!").fadeIn('slow');
     $("#score-num").text(Defense.player.score);
     $("#kills-num").text(Defense.kills);
     $("#game-over-score").fadeIn('slow');
@@ -293,9 +293,9 @@ $(function() {
         return w;
       })();
      
-      var audioDuration = $audio.currentTime; 
+      var audioDuration = $audio.duration; 
       var gameInterval = setInterval(function() {
-        var audioTime = $audio.currentaudioTime;
+        var audioTime = $audio.currentTime;
         if (window.Defense && !Defense.gameOver) {
           var opacity = parseFloat($lightning.css('opacity'));
           if (opacity > 0) {
