@@ -26,12 +26,21 @@
 <body>
   <div id="container">
     <header>
-      <center><h2>ZomBeat Defense</h2></center>
     </header>
     <div id="main" role="main">
       <div id="cr-stage">
         <div id="intro-page">
-          <p>ZomBeat Defense</p>
+          <p><h3>ZomBeat Defense</h3></p>
+          <p>
+            <p>Instructions:</p>
+            <ul>
+              <li>Arrow keys or WASD to move. Mouse to aim. Space to shoot.</li>
+              <li>Survive waves of enemies until the end of the song.</li>
+              <li>Zombies spawn and gain powerups to the beat.</li>
+              <li>Good luck!</li>
+            </ul>
+            <button id="play-button">Play!</button>
+          </p>
         </div>
         <div id="game-over">Game Over</div>
         <div id="game-over-score">Score: <span id="score-num">0</span></div>
@@ -48,7 +57,7 @@
   <script defer src="js/script.js"></script>
   <script>
     if (Modernizr.audio.ogg) {
-      
+      console.log('HTML5 audio is supported!');
     }
     var segments = data.segments;
     var events = [];

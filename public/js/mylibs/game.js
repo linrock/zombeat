@@ -95,8 +95,8 @@ $(document).ready(function() {
     }
   };
   Defense.nextWave = nextWave;
-   
-  var fadeBackground = function() { 
+
+  var fadeBackground = function() {
     $("#dude-canvas").css({
       'background-color': 'black',
       opacity: 0.3
@@ -138,12 +138,18 @@ $(document).ready(function() {
 		Crafty.sprite(32, "img/gifs/main-8.gif", { main8: [0,0,1,1.5] });
 
 		//start the main scene when loaded
-		Crafty.scene("main");
+		Crafty.scene("intro");
 	});
 	Crafty.background("url('img/abg.png')");
 
   Crafty.scene("intro", function() {
     fadeBackground();
+    $("#intro-page").show();
+    $("#play-button").click(function(e) {
+      $("#intro-page").fadeOut(function() {
+        Crafty.scene("main");
+      });
+    });
   });
 
   Crafty.scene("unsupported", function() {
@@ -163,29 +169,6 @@ $(document).ready(function() {
   var mouseX = 0;
   var mouseY = 0;
 
-  var randomlyDropPowerups = function() {
-    var getDropCoordinates = function() {
-      return {
-        x: Crafty.randRange(0+100, Crafty.viewport.width-100),
-        y: Crafty.randRange(0+100, Crafty.viewport.height-100)
-      }
-    };
-    setTimeout(function() {
-      Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
-    }, 0);
-    var i = setInterval(function() {
-      if (Defense.gameOver) {
-        clearInterval(i);
-        return;
-      }
-      if (Math.random() > 0.5) {
-        Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
-      } else if (Math.random() > 0.5) {
-        Crafty.e("2D, DOM, health").attr(getDropCoordinates());
-      }
-    }, 10000);
-  };
-
 	Crafty.scene("main", function() {
     $("#dude-canvas")
       .bind("mousemove", function(e) {
@@ -196,7 +179,28 @@ $(document).ready(function() {
         player.shootBullet();
       });
   
-    randomlyDropPowerups();
+    (function() {
+      var getDropCoordinates = function() {
+        return {
+          x: Crafty.randRange(0+100, Crafty.viewport.width-100),
+          y: Crafty.randRange(0+100, Crafty.viewport.height-100)
+        }
+      };
+      setTimeout(function() {
+        Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
+      }, 0);
+      var i = setInterval(function() {
+        if (Defense.gameOver) {
+          clearInterval(i);
+          return;
+        }
+        if (Math.random() > 0.5) {
+          Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
+        } else if (Math.random() > 0.5) {
+          Crafty.e("2D, DOM, health").attr(getDropCoordinates());
+        }
+      }, 10000);
+    })()
 
     wave_num = Crafty.e("2D, DOM, Text")
       .text("Wave: 1")
