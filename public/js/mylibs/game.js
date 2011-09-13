@@ -65,7 +65,7 @@ $(function() {
   //function to fill the screen with zombies by a random amount
   var spawnZombies = function(lower, upper) {
     var numSpawns = Crafty.randRange(lower, upper);
-    if (Defense.zombieCount > 25) {
+    if (Defense.zombieCount > 50) {
       return;
     } else if (Defense.zombieCount > 15) {
       Crafty.e("2D, DOM, smfront, Collision, zombie");
@@ -472,9 +472,7 @@ $(function() {
         }
 				// If all zombies are gone, MORE ZOMBIES
 				if (Defense.zombieCount <= 0) {
-          if (!Defense.songStarted) {
-  					spawnZombies(lastCount, lastCount * 1.5);
-          }
+					spawnZombies(lastCount, lastCount * 1.5);
 				}
 			}).collision()
 			.onHit("zombie", function(e) {
