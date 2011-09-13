@@ -68,6 +68,7 @@ $(document).ready(function() {
       }
     }
   };
+  Defense.spawnZombies = spawnZombies;
 
   var getBoundedX = function(x) {
     if (x < 0) {
@@ -94,7 +95,13 @@ $(document).ready(function() {
     }
   };
   Defense.nextWave = nextWave;
-  Defense.spawnZombies = spawnZombies;
+   
+  var fadeBackground = function() { 
+    $("#dude-canvas").css({
+      'background-color': 'black',
+      opacity: 0.3
+    });
+  };
   
   var lastCount;    // keep a count of zombies
 
@@ -133,14 +140,20 @@ $(document).ready(function() {
 		//start the main scene when loaded
 		Crafty.scene("main");
 	});
+	Crafty.background("url('img/abg.png')");
+
+  Crafty.scene("intro", function() {
+    fadeBackground();
+  });
+
+  Crafty.scene("unsupported", function() {
+    Defense.gameOver = true;
+    fadeBackground();
+  });
 
   Crafty.scene("game_over", function() {
-		Crafty.background("url('img/abg.png')");
     Defense.gameOver = true;
-    $("#dude-canvas").css({
-      'background-color': 'black',
-      opacity: 0.3
-    });
+    fadeBackground();
     $("#game-over").fadeIn('slow');
     $("#score-num").text(Defense.player.score);
     $("#game-over-score").fadeIn('slow');
@@ -174,8 +187,6 @@ $(document).ready(function() {
   };
 
 	Crafty.scene("main", function() {
-		Crafty.background("url('img/abg.png')");
-
     $("#dude-canvas")
       .bind("mousemove", function(e) {
         mouseX = e.layerX || e.offsetX;

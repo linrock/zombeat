@@ -8,13 +8,14 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title></title>
+  <title>ZomBeat Defense</title>
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/libs/modernizr-2.0.6.min.js"></script>
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>-->
   <script src="js/libs/jquery-1.6.2.min.js"></script>
   <script src="js/libs/crafty-0.4.2.js"></script>
   <script src="js/mylibs/song.js"></script>
@@ -25,13 +26,17 @@
 <body>
   <div id="container">
     <header>
-      <center><h2>Zombie Defense</h2></center>
+      <center><h2>ZomBeat Defense</h2></center>
     </header>
     <div id="main" role="main">
       <div id="cr-stage">
+        <div id="intro-page">
+          <p>ZomBeat Defense</p>
+        </div>
         <div id="game-over">Game Over</div>
         <div id="game-over-score">Score: <span id="score-num">0</span></div>
         <div id="wave-indicator">Wave <span id="wave-num">0</span></div>
+        <div id="unsupported">Sorry, but HTML5 audio is required to play. :(</div>
         <canvas id="dude-canvas"></canvas>
       </div>
       <div class="strobe"></div>
@@ -42,6 +47,9 @@
   <script defer src="js/plugins.js"></script>
   <script defer src="js/script.js"></script>
   <script>
+    if (Modernizr.audio.ogg) {
+      
+    }
     var segments = data.segments;
     var events = [];
     for (var i in segments) {

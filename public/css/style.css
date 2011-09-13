@@ -21,6 +21,14 @@ body {
   opacity: 0;
   cursor: crosshair;
 }
+#intro-page {
+  font-size: 12pt;
+  line-height: 300px;
+  width: 800px;
+  text-align: center;
+  display: none;
+  position: absolute;
+}
 #game-over {
   font-size: 40pt;
   line-height: 300px;
@@ -53,6 +61,17 @@ body {
   text-transform: uppercase;
   color: yellow;
   z-index: 15;
+  position: absolute;
+  display: none;
+}
+#unsupported {
+  font-size: 16pt;
+  font-weight: bold;
+  line-height: 300px;
+  margin-left: 100px;
+  width: 600px;
+  text-align: center;
+  z-index: 20;
   position: absolute;
   display: none;
 }
