@@ -153,3 +153,9 @@ footer {
   font-size: 0.6em;
   text-align: center;
 }
+footer a {
+  color: #474747;
+}
+footer a:visited {
+  color: #474747;
+}
