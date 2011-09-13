@@ -540,13 +540,13 @@ $(function() {
 			.bind("keydown", function(e) {
 				//on keydown, set the move booleans
 				if(e.keyCode === Crafty.keys.RIGHT_ARROW || e.keyCode === Crafty.keys.D) {
-					this.move.right = true;
+					this.move.right = true; this.move.left = false;
 				} else if(e.keyCode === Crafty.keys.LEFT_ARROW || e.keyCode === Crafty.keys.A) {
-					this.move.left = true;
+					this.move.left = true; this.move.right = false;
 				} else if(e.keyCode === Crafty.keys.UP_ARROW || e.keyCode === Crafty.keys.W) {
-					this.move.up = true;
+					this.move.up = true; this.move.down = false;
 				} else if(e.keyCode === Crafty.keys.DOWN_ARROW || e.keyCode === Crafty.keys.S) {
-					this.move.down = true;
+					this.move.down = true; this.move.up = false;
         } else if(e.keyCode === Crafty.keys.SPACE) {
           this.shooting = true;
 				}
