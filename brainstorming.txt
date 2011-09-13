@@ -1,4 +1,8 @@
+Priorities
+* HP Bar instead of text.
+
 Achievements: ppl like to stick around until they reach a goal or finish an achievement. SHow a list of possible achievements. During teh game, notify the user of any completed achievements and at the end of teh game, summarize their achievements and the ones they weren't able to get. 
+    i.e. # of kills, longest time w/o getting hit.
 
 Character creation: make it more personable and get users attached to their characters. (e.g. choose their character's name, and label the character on screen with his name)
 

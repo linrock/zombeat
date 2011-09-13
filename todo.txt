@@ -32,7 +32,7 @@ health
 Priorities
 ==========
 * Health pickups
-
+* normalize song data (beat/amplitude)
 
 Ben
 ===
@@ -46,4 +46,6 @@ Ben
   * What makes the game more fun
   * What makes people want to come back and play
   * What makes the game good enough that people would want to share it
+* Think about more stuff to do with song analysis data
+* Find more songs to use
 * Ask other people for their comments/opinions on the game as it is and how to improve it.
