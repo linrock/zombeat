@@ -521,16 +521,16 @@ $(function() {
 		// Zombie component. Types: normal, tot, dog
 		Crafty.c("zombie", {
 			init: function() {
-        if (Defense.wave >= 2 && (Math.random()>0.8)) {
+        if (Defense.wave >= 2 && (Math.random()>0.5)) {
           this.zombie_type = "possessor";
           this.removeComponent("smfront").addComponent("possessor");
-        } else if (Defense.wave >= 3 && Math.random()>0.95) {
+        } else if (Defense.wave >= 3 && Math.random()>0.9) {
           this.zombie_type = "tot";
           this.removeComponent("smfront").addComponent("tot");
-        } else if (Defense.wave >= 4 && Math.random()>0.95) {
+        } else if (Defense.wave >= 4 && Math.random()>0.9) {
           this.zombie_type = "dog";
           this.removeComponent("smfront").addComponent("dfront");
-        } else if (Defense.wave >= 5 && Math.random()>0.5 && enemyCounts.fireghosts < 2) {
+        } else if (Defense.wave >= 5 && Math.random()>0.95 && enemyCounts.fireghosts < 2) {
           this.zombie_type = "fireghost";
           this.removeComponent("smfront").addComponent("fireghost");
           enemyCounts.fireghosts++;
@@ -548,13 +548,16 @@ $(function() {
           hp: ~~(Defense.wave/2),
           frameOffset: ~~(Math.random()*FPS)
 				});
-        this.shootEnemyBullet = function(direction) {
+        this.shootEnemyBullet = function(options) {
+          var options = options || {};
+          var color = options.color || "rgb(255,0,0)";
+
           var origin_x = this._x+SPRITE_DIMS/2;
           var origin_y = this._y+SPRITE_DIMS/2;
 
-          if (direction) {
-            var xv = direction[0];
-            var yv = direction[1];
+          if (options.direction) {
+            var xv = options.direction[0];
+            var yv = options.direction[1];
           } else {
             var xv = player._x-origin_x;
             var yv = -(player._y-origin_y);
@@ -570,7 +573,7 @@ $(function() {
               xspeed: 7 * xv/m,
               yspeed: 7 * yv/m
             })
-            .color("rgb(255, 0, 0)")
+            .color(color)
             .bind("enterframe", function() {
               this.x += this.xspeed;
               this.y -= this.yspeed;
@@ -730,7 +733,7 @@ $(function() {
               this.max_speed += 0.2;
             }
           } else if (this.zombie_type === 'tot') {
-            this.shootEnemyBullet();
+            this.shootEnemyBullet({ color: "#FBB117" });
           } else if (this.zombie_type === 'possessor') {
             var m = Math.sqrt(this.xspeed*this.xspeed+this.yspeed*this.yspeed);
             this.x += 25*this.xspeed/m;
@@ -745,10 +748,10 @@ $(function() {
             if (this.xspeed <= 1 && this.yspeed <= 1) {
               this.max_speed += 0.1;
             }
-            this.shootEnemyBullet([0.5,0.5]);
-            this.shootEnemyBullet([0.5,-0.5]);
-            this.shootEnemyBullet([-0.5,0.5]);
-            this.shootEnemyBullet([-0.5,-0.5]);
+            this.shootEnemyBullet({ direction: [0.5,0.5] });
+            this.shootEnemyBullet({ direction: [0.5,-0.5] });
+            this.shootEnemyBullet({ direction: [-0.5,0.5] });
+            this.shootEnemyBullet({ direction: [-0.5,-0.5] });
           }
         })
         .onHit("zombie", function(e) {
