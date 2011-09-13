@@ -330,7 +330,8 @@ $(function() {
 					this.move.up = true;
 				} else if(e.keyCode === Crafty.keys.DOWN_ARROW || e.keyCode === Crafty.keys.S) {
 					this.move.down = true;
-				} else if(e.keyCode === Crafty.keys.SPACE) {
+        }
+				if(e.keyCode === Crafty.keys.SPACE) {
           this.shootBullet();
 				}
 			}).bind("keyup", function(e) {
@@ -481,7 +482,8 @@ $(function() {
 					yspeed: Crafty.randRange(1, 1), 
 					rspeed: 0,
           max_speed: ZOMBIE_MAX_SPEED,
-          hp: ~~(Defense.wave/2)
+          hp: ~~(Defense.wave/2),
+          frameOffset: ~~(Math.random()*FPS)
 				});
         this.shootBullet = function() {
           var origin_x = this._x+SPRITE_DIMS/2;
@@ -506,7 +508,7 @@ $(function() {
               this.y -= this.yspeed;
               
               // Destroy if it goes out of bounds
-              if (Crafty.frame() % 60 === 0) {
+              if ((Crafty.frame()+this.frameOffset) % 60 === 0) {
                 if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
                   this.destroy();
                 }
