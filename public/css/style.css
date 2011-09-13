@@ -151,6 +151,7 @@ button#play-button:active {
   padding-top: 5px;
 }
 #bottom-container {
+  padding-left: 130px;
   margin: 15px auto;
   width: 300px;
 }
