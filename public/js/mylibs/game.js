@@ -220,17 +220,24 @@ $(function() {
         }
       };
       var getTimeInterval = function() {
-        return ~~(Math.random()*5000)+10000;
+        return ~~(Math.random()*5000)+20000;
       };
       setTimeout(function() {
         Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
       }, 3000);
 
+      var pSpawnNum = 0;
+      var hSpawnNum = 0;
+
       var dropPowerup = function() {
         if (Defense.gameOver) {
           return;
         } else {
-          Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
+          if (pSpawnNum > 0) {
+            Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
+          } else {
+            pSpawnNum++;
+          }
           setTimeout(dropPowerup, getTimeInterval());
         }
       };
@@ -238,7 +245,11 @@ $(function() {
         if (Defense.gameOver) {
           return;
         } else {
-          Crafty.e("2D, DOM, health").attr(getDropCoordinates());
+          if (hSpawnNum > 0) {
+            Crafty.e("2D, DOM, health").attr(getDropCoordinates());
+          } else {
+            hSpawnNum++;
+          }
           setTimeout(dropHealth, getTimeInterval()*2.5);
         }
       };
