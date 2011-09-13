@@ -143,7 +143,19 @@ button#play-button:active {
   text-align: center;
   border: 2px solid #272727;
   padding: 5px;
+  float: left;
+}
+#fb-like-container {
+  float: left;
+  padding-left: 20px;
+  padding-top: 5px;
+}
+#bottom-container {
   margin: 15px auto;
+  width: 300px;
+}
+.clear {
+  clear: both;
 }
 audio {
   display: block;

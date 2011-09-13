@@ -25,16 +25,7 @@
 </head>
 
 <body>
-  <div id="fb-root"></div>
-  <script>(function(d){
-        var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
-          js = d.createElement('script'); js.id = id; js.async = true;
-            js.src = "//connect.facebook.net/en_US/all.js#appId=257336084306298&xfbml=1";
-              d.getElementsByTagName('head')[0].appendChild(js);
-  }(document));</script>
-  <div id="container">
-    <header>
-    </header>
+    <header></header>
     <div id="main" role="main">
       <div id="cr-stage">
         <div id="intro-page">
@@ -60,12 +51,18 @@
         <canvas id="dude-canvas"></canvas>
       </div>
       <div class="strobe"></div>
-      <div id="song-info">
-        <span id="song-current-time">00:00</span>
-      </div>
       <audio id="the-audio" src="data/superbeast.ogg" preload></audio>
-      <div class="fb-like" style="display:inline;margin-left:10px" data-href="http://zombeatdefense.com/" data-send="false" data-width="450" data-show-faces="true"></div>
+      <div id="bottom-container">
+        <div id="song-info">
+          <span id="song-current-time">00:00</span>
+        </div>
+        <div id="fb-like-container">
+          <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fzombeatdefense.com&amp;send=false&amp;layout=button_count&amp;width=200&amp;show_faces=true&amp;action=like&amp;colorscheme=dark&amp;font=arial&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:21px;" allowTransparency="true"></iframe>
+        </div>
+        <div class="clear"></div>
+      </div>
     </div>
+    <div class="clear"></div>
     <footer>Note: HTML5 Audio required for game to function correctly. <a href="http://www.google.com/chrome">Chrome</a> is recommended.</footer>
   </div>
   <script src="js/plugins.js"></script>
