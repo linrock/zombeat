@@ -222,7 +222,7 @@ $(function() {
           return;
         } else {
           Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
-          setInterval(dropPowerup, getTimeInterval());
+          setTimeout(dropPowerup, getTimeInterval());
         }
       };
       var dropHealth = function() {
@@ -230,7 +230,7 @@ $(function() {
           return;
         } else {
           Crafty.e("2D, DOM, health").attr(getDropCoordinates());
-          setInterval(dropHealth, getTimeInterval()*2.5);
+          setTimeout(dropHealth, getTimeInterval()*2.5);
         }
       };
       dropPowerup();
