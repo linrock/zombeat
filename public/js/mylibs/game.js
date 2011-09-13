@@ -30,7 +30,8 @@ const SPRITES = [
 const WIDTH = 800;
 const HEIGHT = 500;
 
-const ZOMBIE_MAX_SPEED = 2;
+const ZOMBIE_MAX_SPEED = 1.5;
+const PLAYER_MAX_SPEED = 4;
 const SHOT_DELAY = 8
 
 var Defense = {
@@ -57,11 +58,15 @@ $(function() {
 
   //function to fill the screen with zombies by a random amount
   var spawnZombies = function(lower, upper) {
-    var rocks = Crafty.randRange(lower, upper);
-    if (Defense.zombieCount < 50) {
-      Defense.zombieCount += rocks;
-      lastCount = rocks;
-      for(var i = 0; i < rocks; i++) {
+    var numSpawns = Crafty.randRange(lower, upper);
+    if (Defense.zombieCount > 25) {
+      return;
+    } else if (Defense.zombieCount > 15) {
+      Crafty.e("2D, DOM, front, Collision, zombie");
+    } else {
+      Defense.zombieCount += numSpawns;
+      lastCount = numSpawns;
+      for(var i = 0; i < numSpawns; i++) {
         Crafty.e("2D, DOM, front, Collision, zombie");
       }
     }
@@ -93,6 +98,19 @@ $(function() {
     }
   };
   Defense.nextWave = nextWave;
+
+  var buffZombies = function() {
+    Crafty.e("2D, DOM, zombieBuff")
+    .attr({
+      x: 0,
+      y: 0,
+      w: 1000,
+      h: 1000, 
+    }).bind("enterframe", function() {
+      this.destroy();
+    });
+  };
+  Defense.buffZombies = buffZombies;
 
   var fadeBackground = function() {
     $("#dude-canvas").css({
@@ -405,7 +423,7 @@ $(function() {
         }
 
 				// if the move up is true, increment the y/xspeeds
-        var max_speed = 4;
+        var max_speed = PLAYER_MAX_SPEED;
         
         this.xspeed *= this.decay;
         this.yspeed *= this.decay;
@@ -473,7 +491,7 @@ $(function() {
           this.zombie_type = "dog";
           this.removeComponent("front").addComponent("dfront");
         // } else if (true) {
-        } else if (Math.random()>0.9) {
+        } else if (Math.random()>0.95) {
           this.zombie_type = "tot";
           this.removeComponent("front").addComponent("tot");
         } else {
@@ -490,7 +508,7 @@ $(function() {
           hp: ~~(Defense.wave/2),
           frameOffset: ~~(Math.random()*FPS)
 				});
-        this.shootBullet = function() {
+        this.shootEnemyBullet = function() {
           var origin_x = this._x+SPRITE_DIMS/2;
           var origin_y = this._y+SPRITE_DIMS/2;
 
@@ -541,9 +559,6 @@ $(function() {
             var components = ["dfront","dleft","dback","dright"];
           } else if (this.zombie_type === "tot") {
             var components = ["tot","tot","tot","tot"];
-            if (Crafty.frame() % 60 == 0) {
-              this.shootBullet();
-            }
           } else {
             var components = ["front","left","back","right"];
           }
@@ -632,6 +647,22 @@ $(function() {
           //   x: this._x, y: this._y
           // });
 				})
+        .onHit("zombieBuff", function(e) {
+          console.log('buffed!');
+          if (this.zombie_type === 'normal') {
+            if (this.max_speed < PLAYER_MAX_SPEED) {
+              this.max_speed += 0.1;
+            }
+            this.x += 2*this.xspeed;
+            this.y += 2*this.yspeed;
+          } else if (this.zombie_type === 'dog') {
+            if (this.max_speed < PLAYER_MAX_SPEED+1) {
+              this.max_speed += 0.2;
+            }
+          } else if (this.zombie_type === 'tot') {
+            this.shootEnemyBullet();
+          }
+        })
         .onHit("zombie", function(e) {
           // Center of mass collision handling... need to figure out
           // how people really do collision handling.
