@@ -8,6 +8,7 @@ const SPRITES = [
   "img/tot-corpse.gif",
   "img/gifs/heart.gif",
   "img/gifs/powerup.gif",
+  "img/gifs/possessor.gif",
   "img/gifs/trick-or-treat.gif",
   "img/gifs/sm-front.gif",
   "img/gifs/sm-right.gif",
@@ -25,7 +26,7 @@ const SPRITES = [
   "img/gifs/dog-right.gif",
   "img/gifs/dog-back.gif",
   "img/gifs/dog-left.gif",
-]
+];
 
 const WIDTH = 800;
 const HEIGHT = 500;
@@ -132,6 +133,7 @@ $(function() {
 		Crafty.sprite(32, "img/gifs/powerup.gif", { powerup: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/heart.gif", { health: [0,0,1,1] });
 
+		Crafty.sprite(32, "img/gifs/possessor.gif", { possessor: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/trick-or-treat.gif", { tot: [0,0,1,1.5] });
 
 		Crafty.sprite(32, "img/gifs/sm-front.gif", {  front: [0,0,1,1.5] });
@@ -486,14 +488,15 @@ $(function() {
 		// Zombie component. Types: normal, tot, dog
 		Crafty.c("zombie", {
 			init: function() {
-        // if (true) {
         if (Defense.wave >= 3 && (Math.random()>0.8)) {
           this.zombie_type = "dog";
           this.removeComponent("front").addComponent("dfront");
-        // } else if (true) {
         } else if (Math.random()>0.95) {
           this.zombie_type = "tot";
           this.removeComponent("front").addComponent("tot");
+        } else if (Math.random()>0.6) {
+          this.zombie_type = "possessor";
+          this.removeComponent("front").addComponent("possessor");
         } else {
           this.zombie_type = "normal";
         }
@@ -544,6 +547,9 @@ $(function() {
         } else if (this.zombie_type === "tot") {
           this.max_speed *= 1.2;
           this.hp += 3;
+        } else if (this.zombie_type === "possessor") {
+          this.max_speed = 0.1;
+          this.hp += 1;
         }
         Crafty.e("2D, DOM, fadeAway, poof").attr({ 
           x: this._x-12, y: this._y+12
@@ -648,9 +654,8 @@ $(function() {
           // });
 				})
         .onHit("zombieBuff", function(e) {
-          console.log('buffed!');
           if (this.zombie_type === 'normal') {
-            if (this.max_speed < PLAYER_MAX_SPEED) {
+            if (this.max_speed < PLAYER_MAX_SPEED-0.5) {
               this.max_speed += 0.1;
             }
             this.x += 2*this.xspeed;
@@ -661,6 +666,13 @@ $(function() {
             }
           } else if (this.zombie_type === 'tot') {
             this.shootEnemyBullet();
+          } else if (this.zombie_type === 'possessor') {
+            var m = Math.sqrt(this.xspeed*this.xspeed+this.yspeed*this.yspeed);
+            this.x += 25*this.xspeed/m;
+            this.y += 25*this.yspeed/m;
+            if (this.xspeed <= 0.5 && this.yspeed <= 0.5) {
+              this.max_speed += 0.05;
+            }
           }
         })
         .onHit("zombie", function(e) {
