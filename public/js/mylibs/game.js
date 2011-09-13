@@ -148,6 +148,8 @@ $(document).ready(function() {
     $("#play-button").click(function(e) {
       $("#intro-page").fadeOut(function() {
         Crafty.scene("main");
+        $("#dude-canvas").css({ 'background-color' : 'white' });
+        $("#the-audio").trigger('play');
       });
     });
   });
