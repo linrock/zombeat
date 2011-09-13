@@ -200,7 +200,7 @@ $(document).ready(function() {
           Crafty.e("2D, DOM, health").attr(getDropCoordinates());
         }
       }, 10000);
-    })()
+    })();
 
     wave_num = Crafty.e("2D, DOM, Text")
       .text("Wave: 1")
