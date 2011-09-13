@@ -441,8 +441,11 @@ $(document).ready(function() {
       .onHit("powerup", function(e) {
         // When a powerup is picked up
 				e[0].obj.destroy();
-        // player.powerups.scattershot = Crafty.frame();
-        player.powerups.explosive = Crafty.frame();
+        if (Math.random()>0.5) {
+          player.powerups.scattershot = Crafty.frame();
+        } else {
+          player.powerups.explosive = Crafty.frame();
+        }
       })
       .onHit("health", function(e) {
 				e[0].obj.destroy();
