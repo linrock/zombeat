@@ -45,12 +45,15 @@ var events = (function() {
   };
   return getLoudnessTimings(normalizeSegmentsLoudness(segments));
 })();
-var waves = [];
+var waves = (function() {
+  var w = [];
+  for (var i in data.sections) {
+    var start_time = data.sections[i].start;
+    w.push(start_time);
+  }
+  return w;
+})();
 
-for (var i in data.sections) {
-  var start_time = data.sections[i].start;
-  waves.push(start_time);
-}
 // var $strobe = $(".strobe");
 var $lightning = $("#dude-canvas");
 var $audio = $("#the-audio")[0];
@@ -60,6 +63,9 @@ var $audio = $("#the-audio")[0];
 // $("#the-audio").bind('timeupdate', function() {});
 
 setInterval(function() {
+  if (!Defense.gameStarted) {
+    return;
+  }
   var time = $audio.currentTime;
   if (window.Defense && !Defense.gameOver) {
     var opacity = parseFloat($lightning.css('opacity'));

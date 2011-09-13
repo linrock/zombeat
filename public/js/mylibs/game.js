@@ -47,6 +47,7 @@ var Defense = {
   wave: 0,
   kills: 0,
   gameOver: false,
+  gameStarted: false,
   songStarted: false,
   player: false,
   nextWave: false,
@@ -190,6 +191,7 @@ $(function() {
         Crafty.scene("main");
         $("#dude-canvas").css({ 'background-color' : 'white' });
         $("#the-audio").trigger('play');
+        Defense.gameStarted = true;
       });
     });
   });
