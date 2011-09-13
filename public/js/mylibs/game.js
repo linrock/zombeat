@@ -40,7 +40,10 @@ const HEIGHT = 550;
 
 const ZOMBIE_MAX_SPEED = 1.5;
 const PLAYER_MAX_SPEED = 4;
-const SHOT_DELAY = 8
+const BOSS_HP = 50;
+
+const SHOT_DELAY = 8;
+
 
 var Defense = {
   zombieCount: 0,
@@ -630,7 +633,7 @@ $(function() {
 		// Zombie component. Types: normal, tot, dog
 		Crafty.c("zombie", {
 			init: function() {
-        if (Defense.wave >= 6 && enemyCounts.boss === 0) {
+        if (Defense.wave >= 8 && enemyCounts.boss === 0) {
           this.zombie_type = "boss";
           this.removeComponent("smfront").addComponent("boss");
           enemyCounts.boss++;
@@ -661,6 +664,7 @@ $(function() {
           max_speed: ZOMBIE_MAX_SPEED,
           hp: ~~(Defense.wave/2),
           frameOffset: ~~(Math.random()*FPS),
+          createFrame: Crafty.frame(),
           shootEnemyBullet: function(options) {
             var options = options || {};
             var color = options.color || "rgb(255,0,0)";
@@ -692,7 +696,11 @@ $(function() {
                 this.y -= this.yspeed;
                 
                 // Destroy if it goes out of bounds
-                if ((Crafty.frame()+this.frameOffset) % 60 === 0) {
+                if (Crafty.frame() % 60 === 0) {
+                  if (Crafty.frame() > this.createFrame+300) {
+                    console.log('WTF enemy bullet');
+                    this.destroy();
+                  }
                   if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
                     this.destroy();
                   }
@@ -713,7 +721,7 @@ $(function() {
 
         if (this.zombie_type === "boss") {
           this.max_speed *= 0.5;
-          this.hp += 20;
+          this.hp = 50;
         }
         if (this.zombie_type === "dog") {
           this.max_speed *= 2;
@@ -873,7 +881,7 @@ $(function() {
             this.shootEnemyBullet({ direction: [-0.5,0.5] });
             this.shootEnemyBullet({ direction: [-0.5,-0.5] });
           } else if (this.zombie_type === 'boss') {
-            if (this.hp < 20) {
+            if (this.hp < BOSS_HP) {
               this.hp += 2;
             }
           }
