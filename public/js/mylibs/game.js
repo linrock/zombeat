@@ -14,6 +14,10 @@ const SPRITES = [
   "img/gifs/sm-right.gif",
   "img/gifs/sm-back.gif",
   "img/gifs/sm-left.gif",
+  "img/gifs/z-front.gif",
+  "img/gifs/z-right.gif",
+  "img/gifs/z-back.gif",
+  "img/gifs/z-left.gif",
   "img/gifs/main-1.gif",
   "img/gifs/main-2.gif",
   "img/gifs/main-3.gif",
@@ -64,12 +68,12 @@ $(function() {
     if (Defense.zombieCount > 25) {
       return;
     } else if (Defense.zombieCount > 15) {
-      Crafty.e("2D, DOM, front, Collision, zombie");
+      Crafty.e("2D, DOM, smfront, Collision, zombie");
     } else {
       Defense.zombieCount += numSpawns;
       lastCount = numSpawns;
       for(var i = 0; i < numSpawns; i++) {
-        Crafty.e("2D, DOM, front, Collision, zombie");
+        Crafty.e("2D, DOM, smfront, Collision, zombie");
       }
     }
   };
@@ -142,10 +146,15 @@ $(function() {
 		Crafty.sprite(32, "img/gifs/possessor.gif", { possessor: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/trick-or-treat.gif", { tot: [0,0,1,1.5] });
 
-		Crafty.sprite(32, "img/gifs/sm-front.gif", {  front: [0,0,1,1.5] });
-		Crafty.sprite(32, "img/gifs/sm-right.gif", {  right: [0,0,1,1.5] });
-		Crafty.sprite(32, "img/gifs/sm-back.gif", {   back: [0,0,1,1.5] });
-		Crafty.sprite(32, "img/gifs/sm-left.gif", {   left: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/sm-front.gif", {  smfront: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/sm-right.gif", {  smright: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/sm-back.gif", {   smback: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/sm-left.gif", {   smleft: [0,0,1,1.5] });
+		
+    Crafty.sprite(32, "img/gifs/z-front.gif", {  zfront: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/z-right.gif", {  zright: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/z-back.gif", {   zback: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/z-left.gif", {   zleft: [0,0,1,1.5] });
 		
     Crafty.sprite(40, "img/gifs/dog-front.gif", {  dfront: [0,0,1.2,1] });
 		Crafty.sprite(40, "img/gifs/dog-right.gif", {  dright: [0,0,1.2,1] });
@@ -498,13 +507,13 @@ $(function() {
 			init: function() {
         if (Defense.wave >= 3 && (Math.random()>0.8)) {
           this.zombie_type = "dog";
-          this.removeComponent("front").addComponent("dfront");
+          this.removeComponent("smfront").addComponent("dfront");
         } else if (Math.random()>0.95) {
           this.zombie_type = "tot";
-          this.removeComponent("front").addComponent("tot");
+          this.removeComponent("smfront").addComponent("tot");
         } else if (Math.random()>0.6) {
           this.zombie_type = "possessor";
-          this.removeComponent("front").addComponent("possessor");
+          this.removeComponent("smfront").addComponent("possessor");
         } else {
           this.zombie_type = "normal";
         }
@@ -574,7 +583,7 @@ $(function() {
           } else if (this.zombie_type === "tot") {
             var components = ["tot","tot","tot","tot"];
           } else {
-            var components = ["front","left","back","right"];
+            var components = ["smfront","smleft","smback","smright"];
           }
           var changeComponent = function(component) {
             for (var i in components) {
@@ -628,6 +637,11 @@ $(function() {
               } else if (this.zombie_type === "tot") {
                 player.score += 350;
                 Crafty.e("2D, DOM, fadeAway, totcorpse").attr({ 
+                  x: this._x, y: this._y
+                });
+              } else if (this.zombie_type === 'possessor') {
+                player.score += 100;
+                Crafty.e("2D, DOM, fadeAway, possessor").attr({
                   x: this._x, y: this._y
                 });
               } else if (this.zombie_type === "dog") {
