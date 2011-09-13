@@ -34,7 +34,7 @@
           <div id="intro-instructions">
             <ul>
               <li>Survive waves of enemies until the end of the song.</li>
-              <li>Zombies spawn and gain powerups to the beat.</li>
+              <li>Zombies spawn and become stronger with each beat.</li>
               <li>Waves change when the song transitions.</li>
               <li>Arrow keys or WASD to move. Mouse to aim. Space to shoot.</li>
             </ul>
@@ -44,7 +44,10 @@
         <div id="game-over">Game Over</div>
         <div id="game-over-score">Score: <span id="score-num">0</span></div>
         <div id="wave-indicator">Wave <span id="wave-num">0</span></div>
-        <div id="unsupported">Sorry, but HTML5 audio is required to play. :(</div>
+        <div id="unsupported">
+          <p>Sorry, but HTML5 Audio is required to play :(</p>
+          <p>Try using <a href="http://www.google.com/chrome">Chrome</a> or <a href="http://www.mozilla.org/en-US/firefox/new">Firefox</a></p>
+        </div>
         <canvas id="dude-canvas"></canvas>
       </div>
       <div class="strobe"></div>

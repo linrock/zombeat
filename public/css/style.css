@@ -104,13 +104,14 @@ button#play-button:active {
   display: none;
 }
 #unsupported {
+  color: white;
+  z-index: 50;
+  padding-top: 100px;
   font-size: 16pt;
   font-weight: bold;
-  line-height: 300px;
   margin-left: 100px;
   width: 600px;
   text-align: center;
-  z-index: 20;
   position: absolute;
   display: none;
 }
