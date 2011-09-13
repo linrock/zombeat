@@ -28,7 +28,7 @@ var events = (function() {
   var getLoudnessTimings = function(normalized) {
     var events = [];
     for (var i in segments) {
-      if (segments[i].confidence > 0.6) {
+      if (segments[i].confidence > 0.5) {
         var start_time = segments[i].start;
         var loudness = normalized[i];
         var results = [start_time, loudness];
@@ -69,7 +69,8 @@ setInterval(function() {
   if (time > events[0][0]) {
     // console.log(events[0]+"");
     var loudness = events[0][1];
-    if (loudness >= 0.906) {
+    console.log(loudness);
+    if (loudness >= 0.75) {
       Defense.spawnZombies(1,2);
       Defense.buffZombies();
       // $strobe.css({ 'background-color': 'white' });
