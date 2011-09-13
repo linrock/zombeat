@@ -1,6 +1,12 @@
-if (Modernizr.audio.ogg) {
-  console.log('HTML5 audio is supported!');
-}
+$(function() {
+  if (Modernizr.audio.ogg) {
+    console.log('HTML5 audio is supported!');
+    Defense.loadScene("intro");
+  } else {
+    console.log('HTML5 audio unsupported!');
+    Defense.loadScene("unsupported");
+  }
+});
 
 
 var segments = data.segments;

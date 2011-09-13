@@ -41,7 +41,8 @@ var Defense = {
   gameOver: false,
   songStarted: false,
   player: false,
-  nextWave: false
+  nextWave: false,
+  loadScene: false
 };
 window.Defense = Defense;
 
@@ -122,6 +123,11 @@ $(function() {
   
   var lastCount;    // keep a count of zombies
 
+  var loadScene = function(scene) {
+    Crafty.scene(scene);
+  };
+  Defense.loadScene = loadScene;
+
 	// preload the needed assets
 	Crafty.load(SPRITES, function() {
     Crafty.sprite(48, "img/poof.png", { poof: [0,0] });
@@ -154,9 +160,6 @@ $(function() {
 		Crafty.sprite(32, "img/gifs/main-6.gif", { main6: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-7.gif", { main7: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/main-8.gif", { main8: [0,0,1,1.5] });
-
-		//start the main scene when loaded
-		Crafty.scene("intro");
 	});
 	Crafty.background("url('img/abg.png')");
 
@@ -175,6 +178,7 @@ $(function() {
   Crafty.scene("unsupported", function() {
     Defense.gameOver = true;
     fadeBackground();
+    $("#unsupported").show();
   });
 
   Crafty.scene("game_over", function() {
