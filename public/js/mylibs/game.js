@@ -28,8 +28,8 @@ const SPRITES = [
   "img/gifs/dog-left.gif",
 ];
 
-const WIDTH = 800;
-const HEIGHT = 500;
+const WIDTH = 960;
+const HEIGHT = 550;
 
 const ZOMBIE_MAX_SPEED = 1.5;
 const PLAYER_MAX_SPEED = 4;
