@@ -79,9 +79,21 @@ button#play-button:active {
   position: absolute;
 }
 #game-over-score {
-  color: "#373737";
+  color: "#272727";
   font-size: 30pt;
-  line-height: 400px;
+  line-height: 450px;
+  width: 960px;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+  z-index: 45;
+  display: none;
+  position: absolute;
+}
+#game-over-kills {
+  color: "#272727";
+  font-size: 30pt;
+  line-height: 550px;
   width: 960px;
   text-align: center;
   text-transform: uppercase;

@@ -207,12 +207,24 @@ $(function() {
     $("#unsupported").show();
   });
 
+  Crafty.scene("you_win", function() {
+    Defense.gameOver = true;
+    fadeBackground();
+    $("#game-over").text("You Win").fadeIn('slow');
+    $("#score-num").text(Defense.player.score);
+    $("#kills-num").text(Defense.kills);
+    $("#game-over-score").fadeIn('slow');
+    $("#game-over-kills").fadeIn('slow');
+  });
+
   Crafty.scene("game_over", function() {
     Defense.gameOver = true;
     fadeBackground();
     $("#game-over").fadeIn('slow');
     $("#score-num").text(Defense.player.score);
+    $("#kills-num").text(Defense.kills);
     $("#game-over-score").fadeIn('slow');
+    $("#game-over-kills").fadeIn('slow');
   });
 
   var wave_num;
@@ -280,9 +292,10 @@ $(function() {
         }
         return w;
       })();
-      
-      setInterval(function() {
-        var time = $audio.currentTime;
+     
+      var audioDuration = $audio.currentTime; 
+      var gameInterval = setInterval(function() {
+        var audioTime = $audio.currentaudioTime;
         if (window.Defense && !Defense.gameOver) {
           var opacity = parseFloat($lightning.css('opacity'));
           if (opacity > 0) {
@@ -294,7 +307,7 @@ $(function() {
           }
           // $strobe.css({ 'background-color': 'black' });
         }
-        if (time > events[0][0]) {
+        if (audioTime > events[0][0]) {
           // console.log(events[0]+"");
           var loudness = events[0][1];
           // console.log(loudness);
@@ -306,10 +319,16 @@ $(function() {
           }
           events.shift();
         }
-        if (time > waves[0]) {
+        if (audioTime > waves[0]) {
           Defense.nextWave();
           // console.log('NEXT WAVE!! - ' + Defense.wave);
           waves.shift();
+        }
+
+        // Check if game is over
+        if (audioTime >= audioDuration-0.1) {
+          Crafty.scene("you_win");
+          clearInterval(gameInterval);
         }
       }, 75);
     })();
