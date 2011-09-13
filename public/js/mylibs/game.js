@@ -210,27 +210,31 @@ $(function() {
           y: Crafty.randRange(0+100, Crafty.viewport.height-100)
         }
       };
+      var getTimeInterval = function() {
+        return ~~(Math.random()*5000)+10000;
+      };
       setTimeout(function() {
         Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
-      }, 0);
-      var intervalPowerup = setInterval(function() {
+      }, 3000);
+
+      var dropPowerup = function() {
         if (Defense.gameOver) {
-          clearInterval(intervalPowerup);
           return;
-        }
-        if (Math.random() > 0.75) {
+        } else {
           Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
+          setInterval(dropPowerup, getTimeInterval());
         }
-      }, 10000);
-      var intervalHealth = setInterval(function() {
+      };
+      var dropHealth = function() {
         if (Defense.gameOver) {
-          clearInterval(intervalHealth);
           return;
-        }
-        if (Math.random() > 0.8) {
+        } else {
           Crafty.e("2D, DOM, health").attr(getDropCoordinates());
+          setInterval(dropHealth, getTimeInterval()*2.5);
         }
-      }, 12000);
+      };
+      dropPowerup();
+      dropHealth();
     })();
 
     wave_num = Crafty.e("2D, DOM, Text")
