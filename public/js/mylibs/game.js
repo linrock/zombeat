@@ -67,6 +67,7 @@ $(function() {
 	// Crafty.canvas.init();
 	// Crafty.pause();    // Game is paused at first.
   var enemyCounts = {
+    pumpkins: 0,
     fireghosts: 0,
     boss: 0
   }
@@ -74,16 +75,17 @@ $(function() {
   //function to fill the screen with zombies by a random amount
   var spawnZombies = function(lower, upper) {
     var numSpawns = Crafty.randRange(lower, upper);
-    if (Defense.zombieCount > 50) {
+    if (Defense.zombieCount > 30) {
       return;
-    } else if (Defense.zombieCount > 15) {
+    } else if (Defense.zombieCount > 20 && Math.random()>0.75) {
+      numSpawns = 0;
+    } else if (Defense.zombieCount > 12) {
+      numSpawns = 1;
+    }
+    Defense.zombieCount += numSpawns;
+    lastCount = numSpawns;
+    for(var i = 0; i < numSpawns; i++) {
       Crafty.e("2D, DOM, smfront, Collision, zombie");
-    } else {
-      Defense.zombieCount += numSpawns;
-      lastCount = numSpawns;
-      for(var i = 0; i < numSpawns; i++) {
-        Crafty.e("2D, DOM, smfront, Collision, zombie");
-      }
     }
   };
   Defense.spawnZombies = spawnZombies;
@@ -635,13 +637,14 @@ $(function() {
         } else if (Defense.wave >= 2 && (Math.random()>0.5)) {
           this.zombie_type = "possessor";
           this.removeComponent("smfront").addComponent("possessor");
-        } else if (Defense.wave >= 3 && Math.random()>0.9) {
+        } else if (Defense.wave >= 3 && enemyCounts.pumpkins < 3 && Math.random()>0.9) {
           this.zombie_type = "tot";
           this.removeComponent("smfront").addComponent("tot");
+          enemyCounts.pumpkins++;
         } else if (Defense.wave >= 4 && Math.random()>0.9) {
           this.zombie_type = "dog";
           this.removeComponent("smfront").addComponent("dfront");
-        } else if (Defense.wave >= 5 && Math.random()>0.95 && enemyCounts.fireghosts < 2) {
+        } else if (Defense.wave >= 5 && enemyCounts.fireghosts < 2 && Math.random()>0.95) {
           this.zombie_type = "fireghost";
           this.removeComponent("smfront").addComponent("fireghost");
           enemyCounts.fireghosts++;
@@ -784,6 +787,7 @@ $(function() {
                 Crafty.e("2D, DOM, fadeAway, totcorpse").attr({ 
                   x: this._x, y: this._y
                 });
+                enemyCounts.pumpkins--;
               } else if (this.zombie_type === 'possessor') {
                 player.score += 100;
                 Crafty.e("2D, DOM, fadeAway, possessor").attr({
@@ -839,7 +843,7 @@ $(function() {
 				})
         .onHit("zombieBuff", function(e) {
           if (this.zombie_type === 'normal') {
-            if (this.max_speed < PLAYER_MAX_SPEED-0.5) {
+            if (this.max_speed < PLAYER_MAX_SPEED-0.75) {
               this.max_speed += 0.1;
             }
             this.x += 2*this.xspeed;
