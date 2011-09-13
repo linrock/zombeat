@@ -41,10 +41,6 @@ var events = (function() {
 })();
 var waves = [];
 
-for (var i in events) {
-  console.log('events:' + events[i]);
-}
-
 for (var i in data.sections) {
   var start_time = data.sections[i].start;
   waves.push(start_time);
@@ -73,7 +69,6 @@ setInterval(function() {
   if (time > events[0][0]) {
     // console.log(events[0]+"");
     var loudness = events[0][1];
-    console.log(loudness);
     if (loudness >= 0.906) {
       Defense.spawnZombies(1,2);
       // $strobe.css({ 'background-color': 'white' });
@@ -83,7 +78,7 @@ setInterval(function() {
   }
   if (time > waves[0]) {
     Defense.nextWave();
-    console.log('NEXT WAVE!! - ' + Defense.wave);
+    // console.log('NEXT WAVE!! - ' + Defense.wave);
     waves.shift();
   }
 }, 75);
