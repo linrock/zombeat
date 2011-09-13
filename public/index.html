@@ -25,18 +25,17 @@
 </head>
 
 <body>
+  <div id="fb-root"></div>
+  <script>(function(d){
+        var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+          js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js#appId=257336084306298&xfbml=1";
+              d.getElementsByTagName('head')[0].appendChild(js);
+  }(document));</script>
   <div id="container">
     <header>
     </header>
     <div id="main" role="main">
-          <div id="fb-root"></div>
-          <script>(function(d){
-                var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
-                  js = d.createElement('script'); js.id = id; js.async = true;
-                    js.src = "//connect.facebook.net/en_US/all.js#appId=257336084306298&xfbml=1";
-                      d.getElementsByTagName('head')[0].appendChild(js);
-          }(document));</script>
-      <center>    <div class="fb-like" data-href="http://zombeatdefense.com/" data-send="false" data-width="450" data-show-faces="true"></div></center>
       <div id="cr-stage">
         <div id="intro-page">
           <p><h3>ZomBeat Defense</h3></p>
@@ -65,6 +64,7 @@
         <span id="song-current-time">00:00</span>
       </div>
       <audio id="the-audio" src="data/superbeast.ogg" preload></audio>
+      <div class="fb-like" style="display:inline;margin-left:10px" data-href="http://zombeatdefense.com/" data-send="false" data-width="450" data-show-faces="true"></div>
     </div>
     <footer>Note: HTML5 Audio required for game to function correctly. <a href="http://www.google.com/chrome">Chrome</a> is recommended.</footer>
   </div>
