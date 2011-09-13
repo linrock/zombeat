@@ -45,6 +45,7 @@ const SHOT_DELAY = 8
 var Defense = {
   zombieCount: 0,
   wave: 0,
+  kills: 0,
   gameOver: false,
   songStarted: false,
   player: false,
@@ -266,10 +267,11 @@ $(function() {
       dropHealth();
     })();
 
+    // Status display items
     wave_num = Crafty.e("2D, DOM, Text")
       .text("Wave: 1")
       .attr({
-        x: Crafty.viewport.width - 300,
+        x: Crafty.viewport.width - 400,
         y: 25,
         w: 100,
         h: 25
@@ -279,23 +281,33 @@ $(function() {
     var hp = Crafty.e("2D, DOM, Text")
       .text("HP: 100")
       .attr({
-        x: Crafty.viewport.width - 200,
+        x: Crafty.viewport.width - 320,
         y: 25,
         w: 100,
         h: 25
       })
       .css({ color: '#fff' });
 
-		// Score display
-		var score = Crafty.e("2D, DOM, Text")
-			.text("Score: 0")
+		var kills = Crafty.e("2D, DOM, Text")
+			.text("Kills: 0")
 			.attr({
-        x: Crafty.viewport.width - 100,
+        x: Crafty.viewport.width - 240,
         y: 25,
         w: 100,
         h: 25
       })
 			.css({color: "#fff"});
+
+		var score = Crafty.e("2D, DOM, Text")
+			.text("Score: 0")
+			.attr({
+        x: Crafty.viewport.width - 160,
+        y: 25,
+        w: 100,
+        h: 25
+      })
+			.css({color: "#fff"});
+		
 
 		// The player entity
 		var player = Crafty.e("2D, DOM, main1, Controls, Collision")
@@ -701,6 +713,8 @@ $(function() {
               }
               score.text("Score: "+player.score);
               Defense.zombieCount--;
+              Defense.kills++;
+              kills.text("Kills: "+Defense.kills);
               this.destroy();
             }
           };
