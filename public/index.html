@@ -8,13 +8,14 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title></title>
+  <title>ZomBeat Defense</title>
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/libs/modernizr-2.0.6.min.js"></script>
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>-->
   <script src="js/libs/jquery-1.6.2.min.js"></script>
   <script src="js/libs/crafty-0.4.2.js"></script>
   <script src="js/mylibs/song.js"></script>
@@ -25,13 +26,26 @@
 <body>
   <div id="container">
     <header>
-      <center><h2>Zombie Defense</h2></center>
     </header>
     <div id="main" role="main">
       <div id="cr-stage">
+        <div id="intro-page">
+          <p><h3>ZomBeat Defense</h3></p>
+          <p>
+            <p>Instructions:</p>
+            <ul>
+              <li>Arrow keys or WASD to move. Mouse to aim. Space to shoot.</li>
+              <li>Survive waves of enemies until the end of the song.</li>
+              <li>Zombies spawn and gain powerups to the beat.</li>
+              <li>Good luck!</li>
+            </ul>
+            <button id="play-button">Play!</button>
+          </p>
+        </div>
         <div id="game-over">Game Over</div>
         <div id="game-over-score">Score: <span id="score-num">0</span></div>
         <div id="wave-indicator">Wave <span id="wave-num">0</span></div>
+        <div id="unsupported">Sorry, but HTML5 audio is required to play. :(</div>
         <canvas id="dude-canvas"></canvas>
       </div>
       <div class="strobe"></div>
@@ -42,6 +56,9 @@
   <script defer src="js/plugins.js"></script>
   <script defer src="js/script.js"></script>
   <script>
+    if (Modernizr.audio.ogg) {
+      console.log('HTML5 audio is supported!');
+    }
     var segments = data.segments;
     var events = [];
     for (var i in segments) {
@@ -97,13 +114,12 @@
 
     $("#the-audio")
       .bind('play', function() {
-        console.log('Song playing. Game unpaused:' + Crafty._paused);
+        Defense.songStarted = true;
         if (Crafty._paused === true) {
           Crafty.pause();
         }
       })
       .bind('pause', function() {
-        console.log('Song paused. Game paused:' + Crafty._paused);
         if (Crafty._paused === false || typeof Crafty._paused === 'undefined') {
           Crafty.pause();
         }

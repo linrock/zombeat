@@ -44,8 +44,9 @@ $(function() {
 
 var Defense = {
   zombieCount: 0,
-  gameOver: false,
   wave: 0,
+  gameOver: false,
+  songStarted: false,
   player: false,
   nextWave: false
 };
@@ -67,6 +68,7 @@ $(document).ready(function() {
       }
     }
   };
+  Defense.spawnZombies = spawnZombies;
 
   var getBoundedX = function(x) {
     if (x < 0) {
@@ -93,7 +95,13 @@ $(document).ready(function() {
     }
   };
   Defense.nextWave = nextWave;
-  Defense.spawnZombies = spawnZombies;
+
+  var fadeBackground = function() {
+    $("#dude-canvas").css({
+      'background-color': 'black',
+      opacity: 0.3
+    });
+  };
   
   var lastCount;    // keep a count of zombies
 
@@ -130,16 +138,28 @@ $(document).ready(function() {
 		Crafty.sprite(32, "img/gifs/main-8.gif", { main8: [0,0,1,1.5] });
 
 		//start the main scene when loaded
-		Crafty.scene("main");
+		Crafty.scene("intro");
 	});
+	Crafty.background("url('img/abg.png')");
+
+  Crafty.scene("intro", function() {
+    fadeBackground();
+    $("#intro-page").show();
+    $("#play-button").click(function(e) {
+      $("#intro-page").fadeOut(function() {
+        Crafty.scene("main");
+      });
+    });
+  });
+
+  Crafty.scene("unsupported", function() {
+    Defense.gameOver = true;
+    fadeBackground();
+  });
 
   Crafty.scene("game_over", function() {
-		Crafty.background("url('img/abg.png')");
     Defense.gameOver = true;
-    $("#dude-canvas").css({
-      'background-color': 'black',
-      opacity: 0.3
-    });
+    fadeBackground();
     $("#game-over").fadeIn('slow');
     $("#score-num").text(Defense.player.score);
     $("#game-over-score").fadeIn('slow');
@@ -149,32 +169,7 @@ $(document).ready(function() {
   var mouseX = 0;
   var mouseY = 0;
 
-  var randomlyDropPowerups = function() {
-    var getDropCoordinates = function() {
-      return {
-        x: Crafty.randRange(0+100, Crafty.viewport.width-100),
-        y: Crafty.randRange(0+100, Crafty.viewport.height-100)
-      }
-    };
-    setTimeout(function() {
-      Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
-    }, 0);
-    var i = setInterval(function() {
-      if (Defense.gameOver) {
-        clearInterval(i);
-        return;
-      }
-      if (Math.random() > 0.5) {
-        Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
-      } else if (Math.random() > 0.5) {
-        Crafty.e("2D, DOM, health").attr(getDropCoordinates());
-      }
-    }, 10000);
-  };
-
 	Crafty.scene("main", function() {
-		Crafty.background("url('img/abg.png')");
-
     $("#dude-canvas")
       .bind("mousemove", function(e) {
         mouseX = e.layerX || e.offsetX;
@@ -184,7 +179,28 @@ $(document).ready(function() {
         player.shootBullet();
       });
   
-    randomlyDropPowerups();
+    (function() {
+      var getDropCoordinates = function() {
+        return {
+          x: Crafty.randRange(0+100, Crafty.viewport.width-100),
+          y: Crafty.randRange(0+100, Crafty.viewport.height-100)
+        }
+      };
+      setTimeout(function() {
+        Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
+      }, 0);
+      var i = setInterval(function() {
+        if (Defense.gameOver) {
+          clearInterval(i);
+          return;
+        }
+        if (Math.random() > 0.5) {
+          Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
+        } else if (Math.random() > 0.5) {
+          Crafty.e("2D, DOM, health").attr(getDropCoordinates());
+        }
+      }, 10000);
+    })()
 
     wave_num = Crafty.e("2D, DOM, Text")
       .text("Wave: 1")
@@ -206,7 +222,7 @@ $(document).ready(function() {
       })
       .css({ color: '#fff' });
 
-		//score display
+		// Score display
 		var score = Crafty.e("2D, DOM, Text")
 			.text("Score: 0")
 			.attr({
@@ -217,7 +233,7 @@ $(document).ready(function() {
       })
 			.css({color: "#fff"});
 
-		//player entity
+		// The player entity
 		var player = Crafty.e("2D, DOM, main1, Controls, Collision")
 			.attr({
         _rotation: 0,
@@ -286,6 +302,14 @@ $(document).ready(function() {
             createBullet(this._rotation);
           }
           this.timers.shot = frame;
+        },
+        takeDamage: function(damage) {
+          player.hp -= damage;
+          player.timers.invulnerable = Crafty.frame();
+          hp.text("HP: "+player.hp);
+          if (player.hp <= 0) {
+            Crafty.scene("game_over");
+          }
         }
       })
 			.origin("center")
@@ -387,7 +411,9 @@ $(document).ready(function() {
 				
 				// If all zombies are gone, MORE ZOMBIES
 				if (Defense.zombieCount <= 0) {
-					spawnZombies(lastCount, lastCount * 1.5);
+          if (!Defense.songStarted) {
+  					spawnZombies(lastCount, lastCount * 1.5);
+          }
 				}
 			}).collision()
 			.onHit("zombie", function(e) {
@@ -400,16 +426,16 @@ $(document).ready(function() {
         }
         var frame = Crafty.frame();
         if (parseInt(player.timers.invulnerable)+(FPS/2) < frame) {
-          player.hp -= 10;
+          this.takeDamage(10);
           this.xspeed *= 0.9;
           this.yspeed *= 0.9;
-          player.timers.invulnerable = frame;
-          hp.text("HP: "+player.hp);
-        }
-        if (player.hp <= 0) {
-          Crafty.scene("game_over");
         }
 			})
+      .onHit("enemybullet", function(e) {
+        // When hit by an enemy bullet
+        e[0].obj.destroy();
+        this.takeDamage(5);
+      })
       .onHit("powerup", function(e) {
         // When a powerup is picked up
 				e[0].obj.destroy();
@@ -428,14 +454,14 @@ $(document).ready(function() {
 			init: function() {
         // if (true) {
         if (Defense.wave >= 3 && (Math.random()>0.8)) {
-          var zombie_type = "dog";
+          this.zombie_type = "dog";
           this.removeComponent("front").addComponent("dfront");
         // } else if (true) {
         } else if (Math.random()>0.9) {
-          var zombie_type = "tot";
+          this.zombie_type = "tot";
           this.removeComponent("front").addComponent("tot");
         } else {
-          var zombie_type = "normal";
+          this.zombie_type = "normal";
         }
 				this.origin("center");
 				this.attr({
@@ -447,9 +473,40 @@ $(document).ready(function() {
           max_speed: ZOMBIE_MAX_SPEED,
           hp: ~~(Defense.wave/2)
 				});
-        if (zombie_type === "dog") {
+        this.shootBullet = function() {
+          var origin_x = this._x+SPRITE_DIMS/2;
+          var origin_y = this._y+SPRITE_DIMS/2;
+
+          var xv = player._x-origin_x;
+          var yv = -(player._y-origin_y);
+          var m = Math.sqrt(xv*xv+yv*yv);
+          
+          Crafty.e("2D, DOM, Color, enemybullet")
+            .attr({
+              x: origin_x,
+              y: origin_y,
+              w: 6,
+              h: 6,
+              xspeed: 10 * xv/m,
+              yspeed: 10 * yv/m
+            })
+            .color("rgb(255, 0, 0)")
+            .bind("enterframe", function() {
+              this.x += this.xspeed;
+              this.y -= this.yspeed;
+              
+              // Destroy if it goes out of bounds
+              if (Crafty.frame() % 60 === 0) {
+                if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+                  this.destroy();
+                }
+              }
+            });
+        };
+
+        if (this.zombie_type === "dog") {
           this.max_speed *= 1.5;
-        } else if (zombie_type === "tot") {
+        } else if (this.zombie_type === "tot") {
           this.max_speed *= 1.2;
           this.hp += 3;
         }
@@ -463,10 +520,13 @@ $(document).ready(function() {
           var abs_y = Math.abs(this.yspeed);
           var self = this;
 
-          if (zombie_type === "dog") {
+          if (this.zombie_type === "dog") {
             var components = ["dfront","dleft","dback","dright"];
-          } else if (zombie_type === "tot") {
+          } else if (this.zombie_type === "tot") {
             var components = ["tot","tot","tot","tot"];
+            if (Crafty.frame() % 60 == 0) {
+              this.shootBullet();
+            }
           } else {
             var components = ["front","left","back","right"];
           }
@@ -514,17 +574,17 @@ $(document).ready(function() {
           var takeDamage = function(hp) {
             this.hp -= hp;
             if (this.hp <= 0) {
-              if (zombie_type === "normal") {
+              if (this.zombie_type === "normal") {
                 player.score += 100;
                 Crafty.e("2D, DOM, fadeAway, smcorpse").attr({ 
                   x: this._x, y: this._y+24
                 });
-              } else if (zombie_type === "tot") {
+              } else if (this.zombie_type === "tot") {
                 player.score += 350;
                 Crafty.e("2D, DOM, fadeAway, totcorpse").attr({ 
                   x: this._x, y: this._y
                 });
-              } else if (zombie_type === "dog") {
+              } else if (this.zombie_type === "dog") {
                 player.score += 125;
               }
               score.text("Score: "+player.score);
@@ -542,7 +602,7 @@ $(document).ready(function() {
               h: 56
             })
             .onHit("zombie", function(e) {
-              takeDamage.call(e[0].obj, 1);
+              takeDamage.call(e[0].obj, 0.1);
             });
           }
           bullet.destroy();
@@ -595,16 +655,16 @@ $(document).ready(function() {
       init: function() {
         this.opacity = 1;
         this.bind("enterframe", function() {
-          this.opacity -= 0.15;
+          this.opacity -= 0.1;
           $(this._element).css({ opacity: this.opacity });
-          if (this.opacity <= 0.15) {
+          if (this.opacity <= 0.1) {
             this.destroy();
           }
         });
       }
     });
 		
-		// First level has between 1 and 10 zombies
-		spawnZombies(1, 10);
+		// First level has between 3 and 5 zombies
+		spawnZombies(3, 5);
 	});
 });

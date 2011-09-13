@@ -9,7 +9,9 @@ body {
     margin: 0;
     text-shadow: #000 1px 1px 1px;
 }
-
+header {
+  padding-top: 30px;
+}
 #cr-stage {
   margin: 0 auto;
   border:2px solid #333;
@@ -23,8 +25,42 @@ body {
   position: absolute;
   z-index: 10;
   background-color: white;
-  opacity: 0;
   cursor: crosshair;
+  opacity: 0;
+}
+#intro-page {
+  font-size: 12pt;
+  width: 800px;
+  text-align: center;
+  display: none;
+  position: absolute;
+  z-index: 50;
+}
+#intro-page h3 {
+  color: white;
+  font-size: 2em;
+}
+#intro-page h4 {
+  font-size: 1.6em;
+  z-index: 30;
+}
+button#play-button {
+  color: white;
+  background-color: #171717;
+  border-radius: 6px;
+  font-size: 20pt;
+  font-weight: bold;
+  line-height: 1.2em;
+  padding: 0.3em 1em;
+  border: 3px solid #2f2f2f;
+  text-align: middle;
+  z-index: 50;
+}
+button#play-button:hover {
+  background-color: #272727;
+}
+button#play-button:active {
+  background-color: #474747;
 }
 #game-over {
   font-size: 40pt;
@@ -58,6 +94,17 @@ body {
   text-transform: uppercase;
   color: yellow;
   z-index: 15;
+  position: absolute;
+  display: none;
+}
+#unsupported {
+  font-size: 16pt;
+  font-weight: bold;
+  line-height: 300px;
+  margin-left: 100px;
+  width: 600px;
+  text-align: center;
+  z-index: 20;
   position: absolute;
   display: none;
 }
