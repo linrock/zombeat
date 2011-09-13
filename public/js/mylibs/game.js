@@ -40,7 +40,7 @@ const HEIGHT = 550;
 
 const ZOMBIE_MAX_SPEED = 1.5;
 const PLAYER_MAX_SPEED = 4;
-const BOSS_HP = 50;
+const BOSS_HP = 150;
 
 const SHOT_DELAY = 8;
 
@@ -919,7 +919,7 @@ $(function() {
             this.shootEnemyBullet({ direction: [-0.5,-0.5] });
           } else if (this.zombie_type === 'boss') {
             if (this.hp < BOSS_HP) {
-              this.hp += 2;
+              this.hp += 5;
             }
           }
         })
