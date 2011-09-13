@@ -250,6 +250,7 @@ $(function() {
           up: false,
           down: false
         },
+        shooting: false,
         xspeed: 0,
         yspeed: 0,
         decay: 0.9, 
@@ -266,6 +267,9 @@ $(function() {
           explosive: 0
         },
         shootBullet: function() {
+          if (this.timers.shot + SHOT_DELAY > Crafty.frame()) {
+            return;
+          }
           var self = this;
           var createBullet = function(rotation, properties) {
             var c = "2D, DOM, Color, bullet";
@@ -294,9 +298,6 @@ $(function() {
               });
           };
           var frame = Crafty.frame();
-          if (frame < this.timers.shot + SHOT_DELAY) {
-            return;
-          }
 					// Create a bullet entity
           // if (true) {
           if (this.powerups.scattershot > 0 && frame < this.powerups.scattershot + FPS*10) {
@@ -330,8 +331,8 @@ $(function() {
 					this.move.up = true;
 				} else if(e.keyCode === Crafty.keys.DOWN_ARROW || e.keyCode === Crafty.keys.S) {
 					this.move.down = true;
-				} else if(e.keyCode === Crafty.keys.SPACE) {
-          this.shootBullet();
+        } else if(e.keyCode === Crafty.keys.SPACE) {
+          this.shooting = true;
 				}
 			}).bind("keyup", function(e) {
 				//on key up, set the move booleans to false
@@ -343,7 +344,9 @@ $(function() {
 					this.move.up = false;
 				} else if(e.keyCode === Crafty.keys.DOWN_ARROW || e.keyCode === Crafty.keys.S) {
 					this.move.down = false;
-				}
+				} else if(e.keyCode === Crafty.keys.SPACE) {
+          this.shooting = false;
+        }
 			}).bind("enterframe", function() {
         var self = this;  
         var slowFrame = Crafty.frame() % 5 == 0;
@@ -416,6 +419,9 @@ $(function() {
         this.x = getBoundedX(this._x + this.xspeed);
         this.y = getBoundedY(this._y + this.yspeed);
 				
+        if (this.shooting && (Crafty.frame() > this.timers.shot + SHOT_DELAY)) {
+          this.shootBullet();
+        }
 				// If all zombies are gone, MORE ZOMBIES
 				if (Defense.zombieCount <= 0) {
           if (!Defense.songStarted) {
@@ -481,7 +487,8 @@ $(function() {
 					yspeed: Crafty.randRange(1, 1), 
 					rspeed: 0,
           max_speed: ZOMBIE_MAX_SPEED,
-          hp: ~~(Defense.wave/2)
+          hp: ~~(Defense.wave/2),
+          frameOffset: ~~(Math.random()*FPS)
 				});
         this.shootBullet = function() {
           var origin_x = this._x+SPRITE_DIMS/2;
@@ -506,7 +513,7 @@ $(function() {
               this.y -= this.yspeed;
               
               // Destroy if it goes out of bounds
-              if (Crafty.frame() % 60 === 0) {
+              if ((Crafty.frame()+this.frameOffset) % 60 === 0) {
                 if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
                   this.destroy();
                 }
