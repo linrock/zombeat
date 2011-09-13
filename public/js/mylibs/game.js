@@ -7,7 +7,8 @@ const SPRITES = [
   "img/sm-corpse.gif",
   "img/tot-corpse.gif",
   "img/gifs/heart.gif",
-  "img/gifs/powerup.gif",
+  "img/gifs/question.gif",
+  "img/gifs/present.gif",
   "img/gifs/possessor.gif",
   "img/gifs/trick-or-treat.gif",
   "img/gifs/sm-front.gif",
@@ -140,7 +141,7 @@ $(function() {
 		Crafty.sprite(32, "img/sm-corpse.gif", {  smcorpse: [0,0,1,0.75] });
 		Crafty.sprite(32, "img/tot-corpse.gif", {  totcorpse: [0,0,1,1.5] });
 
-		Crafty.sprite(32, "img/gifs/powerup.gif", { powerup: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/present.gif", { powerup: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/heart.gif", { health: [0,0,1,1] });
 
 		Crafty.sprite(32, "img/gifs/possessor.gif", { possessor: [0,0,1,1.5] });
@@ -655,6 +656,15 @@ $(function() {
                 });
               } else if (this.zombie_type === "dog") {
                 player.score += 125;
+                var components = ["dfront", "dleft", "dback", "dright"];
+                for (var i in components) {
+                  if (this.has(components[i])) {
+                    Crafty.e("2D, DOM, fadeAway, " + components[i]).attr({
+                      x: this._x, y: this._y
+                    });
+                    break;
+                  }
+                }
               }
               score.text("Score: "+player.score);
               Defense.zombieCount--;
