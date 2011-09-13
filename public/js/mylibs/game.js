@@ -310,7 +310,7 @@ $(function() {
           }
           // $strobe.css({ 'background-color': 'black' });
         }
-        if (audioTime > events[0][0]) {
+        if (events.length > 0 && audioTime > events[0][0]) {
           // console.log(events[0]+"");
           var loudness = events[0][1];
           // console.log(loudness);
@@ -322,7 +322,7 @@ $(function() {
           }
           events.shift();
         }
-        if (audioTime > waves[0]) {
+        if (waves.length > 0 && audioTime > waves[0]) {
           Defense.nextWave();
           // console.log('NEXT WAVE!! - ' + Defense.wave);
           waves.shift();
