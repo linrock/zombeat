@@ -194,12 +194,12 @@ $(function() {
           clearInterval(i);
           return;
         }
-        if (Math.random() > 0.5) {
+        if (Math.random() > 0.75) {
           Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
-        } else if (Math.random() > 0.5) {
+        } else if (Math.random() > 0.75) {
           Crafty.e("2D, DOM, health").attr(getDropCoordinates());
         }
-      }, 10000);
+      }, 8000);
     })();
 
     wave_num = Crafty.e("2D, DOM, Text")
