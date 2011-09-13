@@ -294,6 +294,9 @@ $(function() {
       })();
      
       var audioDuration = $audio.duration; 
+      var $songCurrentTime = $("#song-current-time");
+      $("#song-duration").text(~~(audioDuration));
+      var counter = 0;
       var gameInterval = setInterval(function() {
         var audioTime = $audio.currentTime;
         if (window.Defense && !Defense.gameOver) {
@@ -325,11 +328,25 @@ $(function() {
           waves.shift();
         }
 
-        // Check if game is over
-        if (audioTime >= audioDuration-0.1) {
-          Crafty.scene("you_win");
-          clearInterval(gameInterval);
+        // Check if game is over. Otherwise update time.
+        if (counter % 10 == 0) {
+          if (audioTime >= audioDuration-0.1) {
+            Crafty.scene("you_win");
+            clearInterval(gameInterval);
+          } else {
+            var seconds = ~~(audioTime);
+            var minutes = ~~(seconds/60);
+            seconds %= 60;
+            if (minutes < 10) {
+              minutes = "0" + minutes;
+            }
+            if (seconds < 10) {
+              seconds = "0" + seconds;
+            }
+            $songCurrentTime.text(minutes + ":" + seconds);
+          }
         }
+        counter += 1;
       }, 75);
     })();
 
