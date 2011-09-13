@@ -330,7 +330,8 @@ $(function() {
 
         // Check if game is over. Otherwise update time.
         if (counter % 10 == 0) {
-          if (audioTime >= audioDuration-0.1) {
+          if (audioTime >= audioDuration-0.5) {
+            console.log("You win!");
             Crafty.scene("you_win");
             clearInterval(gameInterval);
           } else {
