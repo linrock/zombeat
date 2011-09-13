@@ -11,6 +11,8 @@ body {
 header {
   padding-top: 30px;
 }
+#fb-like {margin:0 auto}
+
 #cr-stage {
   margin: 0 auto;
   border:2px solid #333;
