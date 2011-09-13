@@ -23,7 +23,7 @@ header {
 
 #dude-canvas {
   position: absolute;
-  z-index: 10;
+  z-index: 40;
   background-color: white;
   cursor: crosshair;
   opacity: 0;
@@ -31,18 +31,24 @@ header {
 #intro-page {
   font-size: 12pt;
   width: 800px;
-  text-align: center;
   display: none;
   position: absolute;
   z-index: 50;
+  text-align: center;
 }
 #intro-page h3 {
   color: white;
   font-size: 2em;
 }
-#intro-page h4 {
-  font-size: 1.6em;
-  z-index: 30;
+#intro-instructions {
+  width: 600px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-left: 150px;
+  text-align: left;
+  color: #e7e7e7;
+}
+#intro-page ul {
 }
 button#play-button {
   color: white;
@@ -69,7 +75,7 @@ button#play-button:active {
   text-align: center;
   text-transform: uppercase;
   color: white;
-  z-index: 20;
+  z-index: 45;
   display: none;
   position: absolute;
 }
@@ -81,7 +87,7 @@ button#play-button:active {
   text-align: center;
   text-transform: uppercase;
   color: white;
-  z-index: 20;
+  z-index: 45;
   display: none;
   position: absolute;
 }

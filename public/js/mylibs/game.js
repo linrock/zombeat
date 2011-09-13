@@ -33,15 +33,6 @@ const HEIGHT = 500;
 const ZOMBIE_MAX_SPEED = 2;
 const SHOT_DELAY = 8
 
-
-var l_context;
-$(function() {
-  l_canvas = $("#dude-canvas")[0];
-  l_canvas.width = WIDTH;
-  l_canvas.height = HEIGHT;
-  l_context = l_canvas.getContext('2d');
-});
-
 var Defense = {
   zombieCount: 0,
   wave: 0,
@@ -52,9 +43,16 @@ var Defense = {
 };
 window.Defense = Defense;
 
-$(document).ready(function() {
+
+$(function() {
+  var l_context;
+  l_canvas = $("#dude-canvas")[0];
+  l_canvas.width = WIDTH;
+  l_canvas.height = HEIGHT;
+  l_context = l_canvas.getContext('2d');
+
 	Crafty.init(FPS, WIDTH, HEIGHT);
-	Crafty.canvas();
+	// Crafty.canvas.init();
 	// Crafty.pause();    // Game is paused at first.
 
   //function to fill the screen with zombies by a random amount
@@ -148,6 +146,8 @@ $(document).ready(function() {
     $("#play-button").click(function(e) {
       $("#intro-page").fadeOut(function() {
         Crafty.scene("main");
+        $("#dude-canvas").css({ 'background-color' : 'white' });
+        $("#the-audio").trigger('play');
       });
     });
   });
@@ -200,7 +200,7 @@ $(document).ready(function() {
           Crafty.e("2D, DOM, health").attr(getDropCoordinates());
         }
       }, 10000);
-    })()
+    })();
 
     wave_num = Crafty.e("2D, DOM, Text")
       .text("Wave: 1")
@@ -439,8 +439,11 @@ $(document).ready(function() {
       .onHit("powerup", function(e) {
         // When a powerup is picked up
 				e[0].obj.destroy();
-        // player.powerups.scattershot = Crafty.frame();
-        player.powerups.explosive = Crafty.frame();
+        if (Math.random()>0.5) {
+          player.powerups.scattershot = Crafty.frame();
+        } else {
+          player.powerups.explosive = Crafty.frame();
+        }
       })
       .onHit("health", function(e) {
 				e[0].obj.destroy();
