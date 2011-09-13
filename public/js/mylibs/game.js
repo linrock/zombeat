@@ -189,17 +189,24 @@ $(function() {
       setTimeout(function() {
         Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
       }, 0);
-      var i = setInterval(function() {
+      var intervalPowerup = setInterval(function() {
         if (Defense.gameOver) {
-          clearInterval(i);
+          clearInterval(intervalPowerup);
           return;
         }
         if (Math.random() > 0.75) {
           Crafty.e("2D, DOM, powerup").attr(getDropCoordinates());
-        } else if (Math.random() > 0.75) {
+        }
+      }, 10000);
+      var intervalHealth = setInterval(function() {
+        if (Defense.gameOver) {
+          clearInterval(intervalHealth);
+          return;
+        }
+        if (Math.random() > 0.8) {
           Crafty.e("2D, DOM, health").attr(getDropCoordinates());
         }
-      }, 8000);
+      }, 12000);
     })();
 
     wave_num = Crafty.e("2D, DOM, Text")
@@ -490,8 +497,8 @@ $(function() {
               y: origin_y,
               w: 6,
               h: 6,
-              xspeed: 10 * xv/m,
-              yspeed: 10 * yv/m
+              xspeed: 7 * xv/m,
+              yspeed: 7 * yv/m
             })
             .color("rgb(255, 0, 0)")
             .bind("enterframe", function() {
