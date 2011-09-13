@@ -2,23 +2,49 @@ if (Modernizr.audio.ogg) {
   console.log('HTML5 audio is supported!');
 }
 
+
 var segments = data.segments;
-var events = [];
-
-var normalizeSegments = function() {
-
-
-};
-
-for (var i in segments) {
-  if (segments[i].confidence > 0.5) {
-    var start_time = segments[i].start;
-    var loudness = segments[i].loudness_max;
-    var results = [start_time, loudness];
-    events.push(results);
-  }
-}
+var events = (function() {
+  var normalizeSegmentsLoudness = function(segments, callback) {
+    var min = 0;
+    var max = 0;
+    for (var i in segments) {
+      var loudness = segments[i].loudness_max;
+      if (loudness > max) {
+        max = loudness;
+      }
+      if (loudness < min) {
+        min = loudness;
+      }
+    }
+    var range = max-min;
+    var normalized = []
+    for (var i in segments) {
+      var n = (segments[i].loudness_max-min)/range;
+      normalized.push(n);
+    }
+    return normalized;
+  };
+  var getLoudnessTimings = function(normalized) {
+    var events = [];
+    for (var i in segments) {
+      if (segments[i].confidence > 0.5) {
+        var start_time = segments[i].start;
+        var loudness = normalized[i];
+        var results = [start_time, loudness];
+        events.push(results);
+      }
+    }
+    return events;
+  };
+  return getLoudnessTimings(normalizeSegmentsLoudness(segments));
+})();
 var waves = [];
+
+for (var i in events) {
+  console.log('events:' + events[i]);
+}
+
 for (var i in data.sections) {
   var start_time = data.sections[i].start;
   waves.push(start_time);
@@ -46,8 +72,9 @@ setInterval(function() {
   }
   if (time > events[0][0]) {
     // console.log(events[0]+"");
-    var amplitude = events[0][1];
-    if (amplitude >= -5) {
+    var loudness = events[0][1];
+    console.log(loudness);
+    if (loudness >= 0.906) {
       Defense.spawnZombies(1,2);
       // $strobe.css({ 'background-color': 'white' });
       $lightning.css({ 'opacity': 0.4 });
