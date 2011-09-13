@@ -30,7 +30,7 @@ const SPRITES = [
 const WIDTH = 800;
 const HEIGHT = 500;
 
-const ZOMBIE_MAX_SPEED = 2;
+const ZOMBIE_MAX_SPEED = 1.5;
 const SHOT_DELAY = 8
 
 var Defense = {
@@ -93,6 +93,19 @@ $(function() {
     }
   };
   Defense.nextWave = nextWave;
+
+  var buffZombies = function() {
+    Crafty.e("2D, DOM, zombieBuff")
+    .attr({
+      x: 0,
+      y: 0,
+      w: 1000,
+      h: 1000, 
+    }).bind("enterframe", function() {
+      this.destroy();
+    });
+  };
+  Defense.buffZombies = buffZombies;
 
   var fadeBackground = function() {
     $("#dude-canvas").css({
@@ -632,6 +645,11 @@ $(function() {
           //   x: this._x, y: this._y
           // });
 				})
+        .onHit("zombieBuff", function(e) {
+          console.log('buffed!');
+          this.x += 12*this.xspeed;
+          this.y += 12*this.yspeed;
+        })
         .onHit("zombie", function(e) {
           // Center of mass collision handling... need to figure out
           // how people really do collision handling.
