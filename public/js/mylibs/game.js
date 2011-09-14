@@ -757,7 +757,7 @@ $(function() {
             for (var i in this.sprites) {
               if (this.has(this.sprites[i])) {
                 Crafty.e("2D, DOM, fadeAway, " + this.sprites[i]).attr({ 
-                  x: this._x, y: this._y
+                  x: this._x, y: this._y, z: this._z
                 });
                 enemyCounter.alterCount(this.sprites[i], -1);
               }
@@ -782,9 +782,11 @@ $(function() {
             this.y += 2*this.yspeed;
           }
 				});
-        Crafty.e("2D, DOM, fadeAway, poof").attr({ 
-          x: this._x-12, y: this._y+12
-        });
+        Crafty.e("2D, DOM, fadeAway, poof")
+          .origin("center")
+          .attr({ 
+            x: this._x, y: this._y, z: this._z
+          });
         this.bind("enterframe", function() {
           var abs_x = Math.abs(this.xspeed);
           var abs_y = Math.abs(this.yspeed);
