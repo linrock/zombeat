@@ -935,7 +935,7 @@ $(function() {
       init: function() {
         this.max_speed = 0.1;
         this.score = 125;
-        this.hp += 3;
+        this.hp += 2;
         this.sprites = ["possessorSprite"];
         this.buffMethod = function () {
           var m = Math.sqrt(this.xspeed*this.xspeed+this.yspeed*this.yspeed);
@@ -1001,7 +1001,7 @@ $(function() {
       init: function() {
         this.max_speed = 0.1;
         this.score = 400;
-        this.hp += 15;
+        this.hp += 12;
         this.sprites = ["fireghostSprite"];
         this.damage = 10;
         this.buffMethod = function() {
@@ -1041,7 +1041,7 @@ $(function() {
       init: function() {
         this.max_speed = 0.0001;
         this.score = 666;
-        this.hp = 25;
+        this.hp = 15;
         this.sprites = ["teddySprite"];
         this.damage = 17;
         this.buffMethod = function () {
@@ -1055,7 +1055,7 @@ $(function() {
       init: function() {
         this.max_speed = 0;
         this.score = 200;
-        this.hp = 25;
+        this.hp = 15;
         this.sprites = ["puppetSpriteIdle"];
         this.damage = 20;
         this.state = 0;
