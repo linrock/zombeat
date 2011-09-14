@@ -38,7 +38,7 @@ const SPRITES = [
 const WIDTH = 960;
 const HEIGHT = 550;
 
-const ZOMBIE_MAX_SPEED = 1;
+const ZOMBIE_MAX_SPEED = 0.5;
 const PLAYER_MAX_SPEED = 4;
 const BOSS_HP = 150;
 
@@ -796,7 +796,7 @@ $(function() {
           var frame = Crafty.frame();
 
           // Change the sprite to match the direction the enemy is facing
-          if (this.sprites.length == 4 && frame % FPS == 0) {
+          if (this.sprites.length == 4 && frame % (FPS/2) == 0) {
             if (abs_x >= abs_y) {
               if (this.xspeed >= 0) {
                 this.changeEnemyComponent(COMPONENT_RIGHT);
@@ -951,7 +951,7 @@ $(function() {
     });
     Crafty.c("dog", {
       init: function() {
-        this.max_speed *= 2;
+        this.max_speed *= 2.5;
         this.score = 100;
         this.hp += 3;
         this.sprites = ["dfront","dleft","dback","dright"];
@@ -966,7 +966,7 @@ $(function() {
     Crafty.c("mummy", {
       init: function() {
         this.max_speed = 0.5;
-        this.hp += 15;
+        this.hp += 12;
         this.sprites = ["smfront","smleft","smback","smright"];
         this.shot = 0;
         this.damage = 5;
@@ -991,7 +991,7 @@ $(function() {
         this.score = 100;
         this.hp += 15;
         this.sprites = ["fireghostSprite"];
-        this.damage = 15;
+        this.damage = 10;
         this.buffMethod = function() {
           var isqrt_2 = 1/Math.sqrt(2);
           var m = Math.sqrt(this.xspeed*this.xspeed+this.yspeed*this.yspeed);
