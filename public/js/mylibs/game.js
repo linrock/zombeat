@@ -524,10 +524,11 @@ $(function() {
             var c = "2D, DOM, Color, bullet, playerBullet";
             Crafty.e(c)
               .attr({
-                x: self._x,
-                y: self._y,
-                w: 5, 
-                h: 5, 
+                x: self._x+16,
+                y: self._y+24,
+                w: 5,
+                h: 5,
+                z: -1,
                 rotation: rotation,
                 xspeed: 20 * Math.sin(rotation / 57.3), 
                 yspeed: 20 * Math.cos(rotation / 57.3),
@@ -574,7 +575,6 @@ $(function() {
           }
         }
       })
-			.origin("center")
 			.bind("keydown", function(e) {
 				if(e.keyCode === Crafty.keys.RIGHT_ARROW || e.keyCode === Crafty.keys.D) {
 					this.move.right = true; this.move.left = false;
@@ -655,6 +655,7 @@ $(function() {
 				// Move the x and y speeds or movement vector
         this.x = getBoundedX(this._x + this.xspeed);
         this.y = getBoundedY(this._y + this.yspeed);
+        this.z = ~~(this.y);
 				
         if (this.shooting && (Crafty.frame() > this.timers.shot + SHOT_DELAY)) {
           this.shootBullet();
@@ -820,8 +821,10 @@ $(function() {
             };
             seekPlayer.call(this);
           }
+
           this.x = getBoundedX(this._x + this.xspeed);
           this.y = getBoundedY(this._y + this.yspeed);
+          this.z = ~~(this.y);
 				})
         .collision()
 				.onHit("playerBullet", function(e) {
