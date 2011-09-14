@@ -790,10 +790,8 @@ $(function() {
           sprites: ["zfront","zleft","zback","zright"],
           buffMethod: function() {
             if (this.max_speed < PLAYER_MAX_SPEED-1.5+Defense.wave/10) {
-              this.max_speed += 0.1;
+              this.max_speed += 0.05;
             }
-            this.x += 1.5*this.xspeed;
-            this.y += 1.5*this.yspeed;
           }
 				});
         Crafty.e("2D, DOM, fadeAway, poof")
@@ -942,7 +940,7 @@ $(function() {
           this.x += 25*this.xspeed/m;
           this.y += 25*this.yspeed/m;
           if (this.xspeed <= 0.5 && this.yspeed <= 0.5) {
-            this.max_speed += 0.1;
+            this.max_speed += 0.075;
           }
         };
         this.damage = 15;
@@ -1024,7 +1022,7 @@ $(function() {
             .color('orange');
           };
           if (this.xspeed <= 1.2 && this.yspeed <= 1.2) {
-            this.max_speed += 0.15;
+            this.max_speed += 0.1;
           }
           burstAttack(-1,0);
           burstAttack(-1*isqrt_2,1*isqrt_2);
