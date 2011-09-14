@@ -13,6 +13,8 @@ const SPRITES = [
   "img/gifs/possessor.gif",
   "img/gifs/possessor_oj.gif",
   "img/gifs/trick-or-treat.gif",
+  "img/gifs/puppet.gif",
+  "img/gifs/puppet-idle.gif",
   "img/gifs/boss.gif",
   "img/gifs/sm-front.gif",
   "img/gifs/sm-right.gif",
@@ -113,8 +115,10 @@ $(function() {
       return "fireghost, fireghostSprite";
     } else if (Defense.wave >= 6 && Math.random()>0.9) {
       return "mummy, smfront";
-    } else if (Defense.wave >= 6 && Math.random()>0.8) {
+    } else if (Defense.wave >= 6 && Math.random()>0.9) {
       return "teddy, teddySprite";
+    } else if (Defense.wave >= 7 && Math.random()>0.9) {
+      return "puppet, puppetSpriteIdle";
     } else {
       return "zombie, zfront";
     }
@@ -207,6 +211,9 @@ $(function() {
 		Crafty.sprite(32, "img/gifs/possessor.gif", { possessorSprite: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/possessor_oj.gif", { fireghostSprite: [0,0,1,1.5] });
 		Crafty.sprite(32, "img/gifs/trick-or-treat.gif", { pumpkinSprite: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/puppet.gif", { puppetSprite: [0,0,1,1.5] });
+		Crafty.sprite(32, "img/gifs/puppet-idle.gif", { puppetSpriteIdle: [0,0] });
+
 		Crafty.sprite(80, "img/gifs/boss.gif", { bossSprite: [0,0] });
 
 		Crafty.sprite(32, "img/gifs/sm-front.gif", {  smfront: [0,0,1,1.5] });
@@ -955,11 +962,11 @@ $(function() {
     });
     Crafty.c("dog", {
       init: function() {
-        this.max_speed *= 2.5;
+        this.max_speed *= 2.75;
         this.score = 100;
         this.hp += 3;
         this.sprites = ["dfront","dleft","dback","dright"];
-        this.damage = 25;
+        this.damage = 20;
         this.buffMethod = function () {
           if (this.max_speed < PLAYER_MAX_SPEED+1) {
             this.max_speed += 0.2;
@@ -1032,7 +1039,7 @@ $(function() {
     Crafty.c("teddy", {
       init: function() {
         this.max_speed = 0.0001;
-        this.score = 0;
+        this.score = 666;
         this.hp = 25;
         this.sprites = ["teddySprite"];
         this.damage = 17;
@@ -1040,6 +1047,25 @@ $(function() {
           var m = Math.sqrt(this.xspeed*this.xspeed+this.yspeed*this.yspeed);
           this.x += 30*this.xspeed/m;
           this.y += 30*this.yspeed/m;
+        };
+      }
+    });
+    Crafty.c("puppet", {
+      init: function() {
+        this.max_speed = 0;
+        this.score = 200;
+        this.hp = 25;
+        this.sprites = ["puppetSpriteIdle"];
+        this.damage = 20;
+        this.state = 0;
+        this.buffMethod = function () {
+          if (this.state++ % 2 === 0) {
+            this.removeComponent("puppetSpriteIdle").addComponent("puppetSprite").attr({ y: this._y-16 });
+            this.max_speed = 1.5;
+          } else {
+            this.removeComponent("puppetSprite").addComponent("puppetSpriteIdle").attr({ y: this._y+16 });
+            this.max_speed = 0;
+          }
         };
       }
     });
