@@ -1,4 +1,4 @@
-const FPS = 60;
+const FPS = 50;
 const SPRITE_DIMS = 48;
 const SPRITES = [
   "img/abg.jpg",
@@ -81,7 +81,7 @@ $(function() {
   d_canvas.height = HEIGHT;
   var d_context = d_canvas.getContext('2d');
 
-	Crafty.init(FPS, WIDTH, HEIGHT);
+	Crafty.init(WIDTH, HEIGHT);
   // Crafty.canvas();
 
   var enemyCounter = new (function() {
@@ -176,7 +176,7 @@ $(function() {
       y: 0,
       w: 1000,
       h: 1000, 
-    }).bind("enterframe", function() {
+    }).bind("EnterFrame", function() {
       this.destroy();
     });
   };
@@ -548,7 +548,7 @@ $(function() {
                 properties: properties || {},
               })
               .color("rgb(255, 255, 0)")
-              .bind("enterframe", function() {	
+              .bind("EnterFrame", function() {	
                 this.x += this.xspeed;
                 this.y -= this.yspeed;
               });
@@ -588,7 +588,7 @@ $(function() {
           }
         }
       })
-			.bind("keydown", function(e) {
+			.bind("KeyDown", function(e) {
 				if(e.keyCode === Crafty.keys.RIGHT_ARROW || e.keyCode === Crafty.keys.D) {
 					this.move.right = true; this.move.left = false;
 				} else if(e.keyCode === Crafty.keys.LEFT_ARROW || e.keyCode === Crafty.keys.A) {
@@ -600,7 +600,7 @@ $(function() {
         } else if(e.keyCode === Crafty.keys.SPACE) {
           this.shooting = true;
 				}
-			}).bind("keyup", function(e) {
+			}).bind("KeyUp", function(e) {
 				if (e.keyCode === Crafty.keys.RIGHT_ARROW || e.keyCode === Crafty.keys.D) {
 					this.move.right = false;
 				} else if(e.keyCode === Crafty.keys.LEFT_ARROW || e.keyCode === Crafty.keys.A) {
@@ -612,7 +612,7 @@ $(function() {
 				} else if(e.keyCode === Crafty.keys.SPACE) {
           this.shooting = false;
         }
-			}).bind("enterframe", function() {
+			}).bind("EnterFrame", function() {
         var slowFrame = Crafty.frame() % 5 == 0;
         if (slowFrame) {
           y_angle = -(mouseY-(this._y+24));
@@ -799,7 +799,7 @@ $(function() {
           .attr({ 
             x: this._x, y: this._y, z: this._z
           });
-        this.bind("enterframe", function() {
+        this.bind("EnterFrame", function() {
           var abs_x = Math.abs(this.xspeed);
           var abs_y = Math.abs(this.yspeed);
           var frame = Crafty.frame();
@@ -893,7 +893,7 @@ $(function() {
 		Crafty.c("fadeAway", {
       init: function() {
         this.opacity = 1;
-        this.bind("enterframe", function() {
+        this.bind("EnterFrame", function() {
           this.opacity -= 0.03;
           $(this._element).css({ opacity: this.opacity });
           if (this.opacity <= 0.031) {
@@ -905,7 +905,7 @@ $(function() {
 		Crafty.c("fastFadeAway", {
       init: function() {
         this.opacity = 1;
-        this.bind("enterframe", function() {
+        this.bind("EnterFrame", function() {
           this.opacity -= 0.1;
           $(this._element).css({ opacity: this.opacity });
           if (this.opacity <= 0.11) {
@@ -916,7 +916,7 @@ $(function() {
     });
     Crafty.c("bullet", {
       init: function() {
-        this.bind("enterframe", function() {
+        this.bind("EnterFrame", function() {
           this.x += this.xspeed;
           this.y -= this.yspeed;
           if (Crafty.frame() % 60 === 0) {
