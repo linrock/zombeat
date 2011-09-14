@@ -113,8 +113,9 @@ $(function() {
       return "fireghost, fireghostSprite";
     } else if (Defense.wave >= 6 && Math.random()>0.9) {
       return "mummy, smfront";
+    } else if (Defense.wave >= 6 && Math.random()>0.8) {
+      return "teddy, teddySprite";
     } else {
-      // return "teddy, teddySprite";
       return "zombie, zfront";
     }
   };
@@ -1032,7 +1033,7 @@ $(function() {
       init: function() {
         this.max_speed = 0.0001;
         this.score = 0;
-        this.hp = 20;
+        this.hp = 25;
         this.sprites = ["teddySprite"];
         this.damage = 17;
         this.buffMethod = function () {
