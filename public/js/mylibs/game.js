@@ -789,11 +789,11 @@ $(function() {
           score: 100,
           sprites: ["zfront","zleft","zback","zright"],
           buffMethod: function() {
-            if (this.max_speed < PLAYER_MAX_SPEED-0.5) {
+            if (this.max_speed < PLAYER_MAX_SPEED-1.5+Defense.wave/10) {
               this.max_speed += 0.1;
             }
-            this.x += 1.75*this.xspeed;
-            this.y += 1.75*this.yspeed;
+            this.x += 1.5*this.xspeed;
+            this.y += 1.5*this.yspeed;
           }
 				});
         Crafty.e("2D, DOM, fadeAway, poof")
@@ -934,7 +934,7 @@ $(function() {
     Crafty.c("possessor", {
       init: function() {
         this.max_speed = 0.1;
-        this.score = 100;
+        this.score = 125;
         this.hp += 3;
         this.sprites = ["possessorSprite"];
         this.buffMethod = function () {
@@ -951,7 +951,7 @@ $(function() {
     Crafty.c("pumpkin", {
       init: function() {
         this.max_speed *= 1.2;
-        this.score = 100;
+        this.score = 200;
         this.hp += 3;
         this.sprites = ["pumpkinSprite"];
         this.damage = 5;
@@ -963,7 +963,7 @@ $(function() {
     Crafty.c("dog", {
       init: function() {
         this.max_speed *= 2.75;
-        this.score = 100;
+        this.score = 250;
         this.hp += 3;
         this.sprites = ["dfront","dleft","dback","dright"];
         this.damage = 20;
@@ -977,6 +977,7 @@ $(function() {
     Crafty.c("mummy", {
       init: function() {
         this.max_speed = 0.5;
+        this.score = 1000;
         this.hp += 12;
         this.sprites = ["smfront","smleft","smback","smright"];
         this.shot = 0;
@@ -999,7 +1000,7 @@ $(function() {
     Crafty.c("fireghost", {
       init: function() {
         this.max_speed = 0.1;
-        this.score = 100;
+        this.score = 400;
         this.hp += 15;
         this.sprites = ["fireghostSprite"];
         this.damage = 10;
@@ -1072,7 +1073,7 @@ $(function() {
     Crafty.c("boss", {
       init: function() {
         this.max_speed *= 0.5;
-        this.score = 100;
+        this.score = 5000;
         this.hp = 50;
         this.sprites = ["bossSprite"];
         this.damage = 50;
