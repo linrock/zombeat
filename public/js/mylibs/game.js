@@ -110,6 +110,8 @@ $(function() {
     } else if (Defense.wave >= 5 && enemyCounter.getCount("fireghostSprite") < 2 && Math.random()>0.95) {
       enemyCounter.alterCount("fireghostSprite", 1);
       return "fireghost, fireghostSprite";
+    } else if (Defense.wave >= 6 && Math.random()>0.9) {
+      return "mummy, smfront";
     } else {
       return "zombie, zfront";
     }
@@ -675,7 +677,7 @@ $(function() {
         }
         var frame = Crafty.frame();
         if (parseInt(player.timers.invulnerable)+(FPS/2) < frame) {
-          this.takeDamage(10);
+          this.takeDamage(e[0].obj.damage);
           this.xspeed *= 0.9;
           this.yspeed *= 0.9;
         }
@@ -709,6 +711,7 @@ $(function() {
 					xspeed: Crafty.randRange(-5, 1), 
 					yspeed: Crafty.randRange(1, 1), 
 					rspeed: 0,
+          damage: 10,
           max_speed: ZOMBIE_MAX_SPEED,
           hp: ~~(Defense.wave/2),
           frameOffset: ~~(Math.random()*FPS),
@@ -775,11 +778,11 @@ $(function() {
           score: 100,
           sprites: ["zfront","zleft","zback","zright"],
           buffMethod: function() {
-            if (this.max_speed < PLAYER_MAX_SPEED-0.75) {
+            if (this.max_speed < PLAYER_MAX_SPEED-0.5) {
               this.max_speed += 0.1;
             }
-            this.x += 2*this.xspeed;
-            this.y += 2*this.yspeed;
+            this.x += 1.75*this.xspeed;
+            this.y += 1.75*this.yspeed;
           }
 				});
         Crafty.e("2D, DOM, fadeAway, poof")
@@ -836,6 +839,7 @@ $(function() {
             .attr({
               x: this._x,
               y: this._y,
+              z: 1000,
               w: 43,
               h: 56
             })
@@ -930,27 +934,28 @@ $(function() {
             this.max_speed += 0.1;
           }
         };
+        this.damage = 15;
       }
     });
-
     Crafty.c("pumpkin", {
       init: function() {
         this.max_speed *= 1.2;
         this.score = 100;
         this.hp += 3;
         this.sprites = ["pumpkinSprite"];
+        this.damage = 5;
         this.buffMethod = function () {
           this.shootEnemyBullet({ color: "#FBB117" });
         };
       }
     });
-
     Crafty.c("dog", {
       init: function() {
         this.max_speed *= 2;
         this.score = 100;
         this.hp += 3;
         this.sprites = ["dfront","dleft","dback","dright"];
+        this.damage = 25;
         this.buffMethod = function () {
           if (this.max_speed < PLAYER_MAX_SPEED+1) {
             this.max_speed += 0.2;
@@ -958,34 +963,75 @@ $(function() {
         };
       }
     });
-
+    Crafty.c("mummy", {
+      init: function() {
+        this.max_speed = 0.5;
+        this.hp += 15;
+        this.sprites = ["smfront","smleft","smback","smright"];
+        this.shot = 0;
+        this.damage = 5;
+        this.buffMethod = function () {
+          if (this.shot++ % 2 === 0) {
+            this.shootEnemyBullet({ direction: [0.5,0.5] });
+            this.shootEnemyBullet({ direction: [0.5,-0.5] });
+            this.shootEnemyBullet({ direction: [-0.5,0.5] });
+            this.shootEnemyBullet({ direction: [-0.5,-0.5] });
+          } else {
+            this.shootEnemyBullet({ direction: [1,0] });
+            this.shootEnemyBullet({ direction: [0,1] });
+            this.shootEnemyBullet({ direction: [-1,0] });
+            this.shootEnemyBullet({ direction: [-1,1] });
+          }
+        }
+      }
+    });
     Crafty.c("fireghost", {
       init: function() {
         this.max_speed = 0.1;
         this.score = 100;
         this.hp += 15;
         this.sprites = ["fireghostSprite"];
-        this.buffMethod = function () {
+        this.damage = 15;
+        this.buffMethod = function() {
+          var isqrt_2 = 1/Math.sqrt(2);
           var m = Math.sqrt(this.xspeed*this.xspeed+this.yspeed*this.yspeed);
           this.x += 30*this.xspeed/m;
           this.y += 30*this.yspeed/m;
-          if (this.xspeed <= 1 && this.yspeed <= 1) {
+          var origin_x = this.x;
+          var origin_y = this.y;
+          var burstAttack = function(x,y) {
+            Crafty.e("2D, DOM, Color, bullet, enemyBullet, fadeAway")
+            .attr({
+              x: origin_x+16,
+              y: origin_y+32,
+              w: 6,
+              h: 6,
+              xspeed: 3*x,
+              yspeed: 3*y
+            })
+            .color('orange');
+          };
+          if (this.xspeed <= 1.2 && this.yspeed <= 1.2) {
             this.max_speed += 0.15;
           }
-          this.shootEnemyBullet({ direction: [0.5,0.5] });
-          this.shootEnemyBullet({ direction: [0.5,-0.5] });
-          this.shootEnemyBullet({ direction: [-0.5,0.5] });
-          this.shootEnemyBullet({ direction: [-0.5,-0.5] });
-        }
+          burstAttack(-1,0);
+          burstAttack(-1*isqrt_2,1*isqrt_2);
+          burstAttack(0,1);
+          burstAttack(1*isqrt_2,1*isqrt_2);
+          burstAttack(1,0);
+          burstAttack(1*isqrt_2,-1*isqrt_2);
+          burstAttack(0,-1);
+          burstAttack(-1*isqrt_2,-1*isqrt_2);
+        };
       }
     });
-
     Crafty.c("boss", {
       init: function() {
         this.max_speed *= 0.5;
         this.score = 100;
         this.hp = 50;
         this.sprites = ["bossSprite"];
+        this.damage = 50;
         this.buffMethod = function () {
           if (this.hp < BOSS_HP) {
             this.hp += 5;
