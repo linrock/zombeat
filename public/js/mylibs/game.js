@@ -111,7 +111,7 @@ $(function() {
       enemyCounter.alterCount("fireghostSprite", 1);
       return "fireghost, fireghostSprite";
     } else {
-      return "zombie, smfront";
+      return "zombie, zfront";
     }
   };
 
@@ -773,7 +773,7 @@ $(function() {
             }
           },
           score: 100,
-          sprites: ["smfront","smleft","smback","smright"],
+          sprites: ["zfront","zleft","zback","zright"],
           buffMethod: function() {
             if (this.max_speed < PLAYER_MAX_SPEED-0.75) {
               this.max_speed += 0.1;
