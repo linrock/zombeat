@@ -4,6 +4,7 @@ const SPRITES = [
   "img/abg.jpg",
   "img/poof.png",
   "img/boom.png",
+  "img/teddy.png",
   "img/sm-corpse.gif",
   "img/tot-corpse.gif",
   "img/gifs/heart.gif",
@@ -113,6 +114,7 @@ $(function() {
     } else if (Defense.wave >= 6 && Math.random()>0.9) {
       return "mummy, smfront";
     } else {
+      // return "teddy, teddySprite";
       return "zombie, zfront";
     }
   };
@@ -193,6 +195,7 @@ $(function() {
 	Crafty.load(SPRITES, function() {
     Crafty.sprite(48, "img/poof.png", { poof: [0,0] });
     Crafty.sprite(43, "img/boom.png", { boom: [0,0,1,1.3] });
+    Crafty.sprite(32, "img/teddy.png", { teddySprite: [0,0,1,1.5] });
 
 		Crafty.sprite(32, "img/sm-corpse.gif", {  smcorpse: [0,0,1,0.75] });
 		Crafty.sprite(32, "img/tot-corpse.gif", {  totcorpse: [0,0,1,1.5] });
@@ -1022,6 +1025,20 @@ $(function() {
           burstAttack(1*isqrt_2,-1*isqrt_2);
           burstAttack(0,-1);
           burstAttack(-1*isqrt_2,-1*isqrt_2);
+        };
+      }
+    });
+    Crafty.c("teddy", {
+      init: function() {
+        this.max_speed = 0.0001;
+        this.score = 0;
+        this.hp = 20;
+        this.sprites = ["teddySprite"];
+        this.damage = 17;
+        this.buffMethod = function () {
+          var m = Math.sqrt(this.xspeed*this.xspeed+this.yspeed*this.yspeed);
+          this.x += 30*this.xspeed/m;
+          this.y += 30*this.yspeed/m;
         };
       }
     });
