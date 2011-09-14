@@ -65,11 +65,18 @@ window.Defense = Defense;
 
 
 $(function() {
-  var l_context;
-  l_canvas = $("#dude-canvas")[0];
+  var $lightning = $("#dude-canvas");
+  var l_canvas = $lightning[0];
   l_canvas.width = WIDTH;
   l_canvas.height = HEIGHT;
-  l_context = l_canvas.getContext('2d');
+  var l_context = l_canvas.getContext('2d');
+  var $lightning = $("#dude-canvas");
+
+  var $damage = $("#damage-canvas");
+  var d_canvas = $damage[0];
+  d_canvas.width = WIDTH;
+  d_canvas.height = HEIGHT;
+  var d_context = d_canvas.getContext('2d');
 
 	Crafty.init(FPS, WIDTH, HEIGHT);
   // Crafty.canvas();
@@ -283,7 +290,6 @@ $(function() {
     // Set up event handling and wave changing 
     // based on song data.
     (function() {
-      var $lightning = $("#dude-canvas");
       var $audio = $("#the-audio")[0];
 
       var segments = data.segments;
@@ -339,12 +345,20 @@ $(function() {
         var audioTime = $audio.currentTime;
         if (window.Defense && !Defense.gameOver) {
           var opacity = parseFloat($lightning.css('opacity'));
+          var dOpacity = parseFloat($damage.css('opacity'));
           if (opacity > 0) {
             opacity -= 0.15;
             if (opacity <= 0.01) {
               opacity = 0;
             }
             $lightning.css({ 'opacity': opacity });
+          }
+          if (dOpacity > 0) {
+            dOpacity -= 0.25;
+            if (dOpacity <= 0.01) {
+              dOpacity = 0;
+            }
+            $damage.css({ 'opacity': dOpacity });
           }
           // $strobe.css({ 'background-color': 'black' });
         }
@@ -475,8 +489,8 @@ $(function() {
 
 		// The player entity
 		var player = Crafty.e("2D, DOM, main1, Controls, Collision")
+			.origin("center")
 			.attr({
-        _rotation: 0,
         move: {
           left: false,
           right: false,
@@ -489,6 +503,8 @@ $(function() {
         decay: 0.9, 
         x: Crafty.viewport.width / 2,
         y: Crafty.viewport.height - 100,
+        w: 32,
+        h: 48,
         score: 0,
         hp: 100,
         timers: {
@@ -508,8 +524,8 @@ $(function() {
             var c = "2D, DOM, Color, bullet, playerBullet";
             Crafty.e(c)
               .attr({
-                x: self._x+SPRITE_DIMS/2,
-                y: self._y+SPRITE_DIMS/2,
+                x: self._x,
+                y: self._y,
                 w: 5, 
                 h: 5, 
                 rotation: rotation,
@@ -544,6 +560,7 @@ $(function() {
           if (player.hp <= 0) {
             Crafty.scene("game_over");
           }
+          $damage.css({ 'opacity': 0.3 });
         },
         changePlayerComponent: function(component) {
           var components = ["main1","main2","main3","main4","main5","main6","main7","main8"];
@@ -652,8 +669,8 @@ $(function() {
         var vy = this.y-e[0].obj.y;
         var m = Math.sqrt(vx*vx+vy*vy);
         if (m > 0.01) {
-          this.x = getBoundedX(this._x+vx/m*2);
-          this.y = getBoundedY(this._y+vy/m*2);
+          this.x = getBoundedX(this._x+vx/m*3);
+          this.y = getBoundedY(this._y+vy/m*3);
         }
         var frame = Crafty.frame();
         if (parseInt(player.timers.invulnerable)+(FPS/2) < frame) {
@@ -905,7 +922,7 @@ $(function() {
           this.x += 25*this.xspeed/m;
           this.y += 25*this.yspeed/m;
           if (this.xspeed <= 0.5 && this.yspeed <= 0.5) {
-            this.max_speed += 0.05;
+            this.max_speed += 0.1;
           }
         };
       }
@@ -948,7 +965,7 @@ $(function() {
           this.x += 30*this.xspeed/m;
           this.y += 30*this.yspeed/m;
           if (this.xspeed <= 1 && this.yspeed <= 1) {
-            this.max_speed += 0.1;
+            this.max_speed += 0.15;
           }
           this.shootEnemyBullet({ direction: [0.5,0.5] });
           this.shootEnemyBullet({ direction: [0.5,-0.5] });

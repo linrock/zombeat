@@ -23,8 +23,15 @@ header {
 
 #dude-canvas {
   position: absolute;
-  z-index: 40;
+  z-index: 42;
   background-color: white;
+  cursor: crosshair;
+  opacity: 0;
+}
+#damage-canvas {
+  position: absolute;
+  z-index: 41;
+  background-color: red;
   cursor: crosshair;
   opacity: 0;
 }
